@@ -1,3 +1,8 @@
+/**
+ * FlowAgent - 个人工作助手前端应用
+ * 优化版：支持步骤可视化、折叠展开、增强交互
+ */
+
 class SSEClient {
     constructor() {
         this.eventSource = null;
@@ -7,12 +12,15 @@ class SSEClient {
         this.retryDelay = 2000;
     }
 
-    connect(query, callbacks) {
+    connect(query, callbacks, templateId = null) {
         if (this.eventSource) {
             this.disconnect();
         }
 
-        const url = `http://localhost:8000/api/stream?query=${encodeURIComponent(query)}`;
+        let url = `http://localhost:8000/api/stream?query=${encodeURIComponent(query)}`;
+        if (templateId) {
+            url += `&template_id=${encodeURIComponent(templateId)}`;
+        }
         this.eventSource = new EventSource(url);
 
         this.eventSource.onopen = () => {
@@ -79,23 +87,172 @@ class App {
         this.timerInterval = null;
         this.processingTime = 0;
         this.currentNodeId = 0;
+        this.currentStepId = 0;
+        this.searchTransitionNode = null;
+        this.reportTransitionNode = null;
+        this.workflowData = {
+            planner: null,
+            searches: [],
+            verifications: [],
+            report: null
+        };
+        
         this.initElements();
+        this.createHistoryModal();
         this.bindEvents();
+        this.loadHistory();
+        this.initTemplateSelector();
+    }
+    
+    // 初始化模板选择器
+    initTemplateSelector() {
+        this.templateSelector = document.getElementById('templateSelector');
+        this.templateDropdown = document.getElementById('templateDropdown');
+        this.templateCategories = document.getElementById('templateCategories');
+        this.selectedTemplateName = document.getElementById('selectedTemplateName');
+        this.currentTemplateId = 'weekly'; // 默认模板
+        
+        if (this.templateSelector) {
+            // 点击选择器头部展开/收起下拉框
+            const header = this.templateSelector.querySelector('.template-selector-header');
+            header.addEventListener('click', () => this.toggleTemplateDropdown());
+            
+            // 点击外部关闭下拉框
+            document.addEventListener('click', (e) => {
+                if (!this.templateSelector.contains(e.target)) {
+                    this.closeTemplateDropdown();
+                }
+            });
+            
+            // 加载模板列表
+            this.loadTemplates();
+        }
+    }
+    
+    // 加载模板列表
+    async loadTemplates() {
+        if (!this.templateCategories) return;
+        
+        this.templateCategories.innerHTML = '<div class="template-loading">加载模板中...</div>';
+        
+        try {
+            const response = await fetch('http://localhost:8000/api/templates');
+            if (!response.ok) throw new Error('加载模板失败');
+            
+            const templates = await response.json();
+            this.renderTemplates(templates);
+        } catch (error) {
+            console.error('加载模板失败:', error);
+            this.templateCategories.innerHTML = `
+                <div class="template-error">
+                    加载模板失败
+                    <button onclick="app.loadTemplates()">重试</button>
+                </div>
+            `;
+        }
+    }
+    
+    // 渲染模板列表
+    renderTemplates(templates) {
+        if (!this.templateCategories) return;
+        
+        // 按分类分组
+        const categories = {};
+        templates.forEach(template => {
+            if (!categories[template.category]) {
+                categories[template.category] = [];
+            }
+            categories[template.category].push(template);
+        });
+        
+        // 渲染分类和模板
+        this.templateCategories.innerHTML = Object.entries(categories).map(([category, items]) => `
+            <div class="template-category">
+                <div class="template-category-title">${category}</div>
+                <div class="template-list">
+                    ${items.map(template => `
+                        <div class="template-item ${template.id === this.currentTemplateId ? 'active' : ''}" 
+                             data-id="${template.id}" 
+                             data-name="${template.name}"
+                             title="${template.description}">
+                            <span class="template-item-icon">${template.icon}</span>
+                            <div class="template-item-info">
+                                <div class="template-item-name">${template.name}</div>
+                                <div class="template-item-desc">${template.description}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+        
+        // 绑定模板点击事件
+        this.templateCategories.querySelectorAll('.template-item').forEach(item => {
+            item.addEventListener('click', () => this.selectTemplate(item.dataset.id, item.dataset.name));
+        });
+    }
+    
+    // 选择模板
+    selectTemplate(templateId, templateName) {
+        this.currentTemplateId = templateId;
+        if (this.selectedTemplateName) {
+            this.selectedTemplateName.textContent = templateName;
+        }
+        
+        // 更新选中状态
+        this.templateCategories.querySelectorAll('.template-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.id === templateId);
+        });
+        
+        this.closeTemplateDropdown();
+        console.log('选择模板:', templateId, templateName);
+    }
+    
+    // 切换下拉框显示状态
+    toggleTemplateDropdown() {
+        if (!this.templateSelector || !this.templateDropdown) return;
+        
+        const isExpanded = this.templateSelector.classList.contains('expanded');
+        if (isExpanded) {
+            this.closeTemplateDropdown();
+        } else {
+            this.openTemplateDropdown();
+        }
+    }
+    
+    // 打开下拉框
+    openTemplateDropdown() {
+        if (!this.templateSelector || !this.templateDropdown) return;
+        this.templateSelector.classList.add('expanded');
+        this.templateDropdown.style.display = 'block';
+    }
+    
+    // 关闭下拉框
+    closeTemplateDropdown() {
+        if (!this.templateSelector || !this.templateDropdown) return;
+        this.templateSelector.classList.remove('expanded');
+        this.templateDropdown.style.display = 'none';
     }
 
     initElements() {
         // 顶部状态栏
         this.statusBadge = document.getElementById('statusBadge');
-        this.statusDot = this.statusBadge.querySelector('.status-dot');
-        this.statusText = this.statusBadge.querySelector('.status-text');
+        this.statusDot = document.getElementById('statusDot');
+        this.statusText = document.getElementById('statusText');
         this.timer = document.getElementById('timer');
-        
+
+        // 历史记录按钮
+        this.historyBtn = document.getElementById('historyBtn');
+        this.historyCount = document.getElementById('historyCount');
+
         // 左侧任务工作台
         this.queryInput = document.getElementById('queryInput');
         this.charCount = document.getElementById('charCount');
-        this.charCountContainer = this.charCount.parentElement;
+        this.charCountBar = document.getElementById('charCountBar');
         this.submitBtn = document.getElementById('submitBtn');
-        
+        this.submitBtnIcon = document.getElementById('submitBtnIcon');
+        this.submitBtnText = document.getElementById('submitBtnText');
+
         // 右侧智能流程画布
         this.workflowCanvas = document.getElementById('workflowCanvas');
         this.emptyState = document.getElementById('emptyState');
@@ -105,16 +262,308 @@ class App {
     bindEvents() {
         this.queryInput.addEventListener('input', () => this.updateCharCount());
         this.submitBtn.addEventListener('click', () => this.handleSubmit());
+        
+        // 历史记录按钮事件
+        this.historyBtn.addEventListener('click', () => this.openHistoryModal());
+        
+        // 模态框关闭事件
+        if (this.historyModalClose) {
+            this.historyModalClose.addEventListener('click', () => this.closeHistoryModal());
+        }
+        if (this.historyModalOverlay) {
+            this.historyModalOverlay.addEventListener('click', () => this.closeHistoryModal());
+        }
+        
+        // 报告模态框关闭事件
+        if (this.reportModalClose) {
+            this.reportModalClose.addEventListener('click', () => this.closeReportModal());
+        }
+        if (this.reportModalOverlay) {
+            this.reportModalOverlay.addEventListener('click', () => this.closeReportModal());
+        }
+        
+        // 报告操作按钮
+        if (this.reportModalCopy) {
+            this.reportModalCopy.addEventListener('click', () => this.copyCurrentReport());
+        }
+        if (this.reportModalExport) {
+            this.reportModalExport.addEventListener('click', () => this.exportCurrentReport());
+        }
+        
+        // ESC键关闭模态框
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeHistoryModal();
+                this.closeReportModal();
+            }
+        });
+        
+        // 预置问题点击事件
+        this.bindPresetQuestions();
+    }
+    
+    bindPresetQuestions() {
+        const presetItems = document.querySelectorAll('.preset-item');
+        presetItems.forEach(item => {
+            // 点击事件 - 只填充输入框，不自动提交
+            item.addEventListener('click', () => {
+                const query = item.dataset.query;
+                if (query) {
+                    this.queryInput.value = query;
+                    this.updateCharCount();
+                    // 聚焦到输入框，让用户可以编辑或点击生成按钮
+                    this.queryInput.focus();
+                    // 滚动到输入框位置（移动端友好）
+                    this.queryInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+            
+            // 键盘事件（可访问性）- 只填充输入框，不自动提交
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const query = item.dataset.query;
+                    if (query) {
+                        this.queryInput.value = query;
+                        this.updateCharCount();
+                        this.queryInput.focus();
+                        this.queryInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        });
+    }
+
+    // 历史记录模态框
+    createHistoryModal() {
+        this.historyModal = document.getElementById('historyModal');
+        this.historyModalOverlay = document.getElementById('historyModalOverlay');
+        this.historyModalClose = document.getElementById('historyModalClose');
+        this.historyModalBody = document.getElementById('historyModalBody');
+        
+        this.reportModal = document.getElementById('reportModal');
+        this.reportModalOverlay = document.getElementById('reportModalOverlay');
+        this.reportModalClose = document.getElementById('reportModalClose');
+        this.reportModalTitle = document.getElementById('reportModalTitle');
+        this.reportModalBody = document.getElementById('reportModalBody');
+        this.reportModalCopy = document.getElementById('reportModalCopy');
+        this.reportModalExport = document.getElementById('reportModalExport');
+        
+        this.currentReportContent = '';
+    }
+
+    openHistoryModal() {
+        if (this.historyModal) {
+            this.renderHistoryList();
+            this.historyModal.classList.add('show');
+            this.historyBtn.classList.add('active');
+            // 焦点管理
+            this.historyModalClose.focus();
+        }
+    }
+
+    closeHistoryModal() {
+        if (this.historyModal) {
+            this.historyModal.classList.remove('show');
+            this.historyBtn.classList.remove('active');
+            // 焦点返回到触发按钮
+            this.historyBtn.focus();
+        }
+    }
+
+    openReportModal(item) {
+        if (this.reportModal) {
+            this.reportModalTitle.textContent = item.query;
+            this.reportModalBody.innerHTML = this.formatReportContent(item.report);
+            this.currentReportContent = item.report;
+            this.reportModal.classList.add('show');
+        }
+    }
+
+    closeReportModal() {
+        if (this.reportModal) {
+            this.reportModal.classList.remove('show');
+        }
+    }
+
+    renderHistoryList() {
+        const history = this.getHistory();
+        
+        if (history.length === 0) {
+            this.historyModalBody.innerHTML = `
+                <div class="history-empty">
+                    <div class="history-empty-icon">📝</div>
+                    <div class="history-empty-text">暂无历史记录</div>
+                </div>
+            `;
+            return;
+        }
+        
+        this.historyModalBody.innerHTML = history.map(item => {
+            const date = new Date(item.timestamp);
+            const timeStr = date.toLocaleString('zh-CN', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            return `
+                <div class="history-list-item" data-id="${item.id}" tabindex="0" role="button">
+                    <div class="history-item-query">${this.escapeHtml(item.query)}</div>
+                    <div class="history-item-meta">
+                        <div class="history-item-time">🕐 ${timeStr}</div>
+                        <div class="history-item-status ${item.status}">
+                            ${item.status === 'completed' ? '✅ 已完成' : '❌ 失败'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // 绑定点击事件
+        this.historyModalBody.querySelectorAll('.history-list-item').forEach(el => {
+            el.addEventListener('click', () => {
+                const id = parseInt(el.dataset.id);
+                const item = history.find(h => h.id === id);
+                if (item) {
+                    this.openReportModal(item);
+                }
+            });
+            
+            // 键盘事件
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const id = parseInt(el.dataset.id);
+                    const item = history.find(h => h.id === id);
+                    if (item) {
+                        this.openReportModal(item);
+                    }
+                }
+            });
+        });
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    copyCurrentReport() {
+        if (this.currentReportContent) {
+            navigator.clipboard.writeText(this.currentReportContent).then(() => {
+                this.showNotification('报告已复制到剪贴板', 'success');
+            }).catch(() => {
+                this.showNotification('复制失败', 'error');
+            });
+        }
+    }
+
+    exportCurrentReport() {
+        if (this.currentReportContent) {
+            const blob = new Blob([this.currentReportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `report_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    }
+
+    // 历史记录相关方法
+    getHistoryKey() {
+        return 'flowagent_history';
+    }
+
+    loadHistory() {
+        const history = this.getHistory();
+        this.updateHistoryCount(history);
+    }
+
+    getHistory() {
+        try {
+            const data = localStorage.getItem(this.getHistoryKey());
+            return data ? JSON.parse(data) : [];
+        } catch (e) {
+            console.error('加载历史记录失败:', e);
+            return [];
+        }
+    }
+
+    saveHistory(history) {
+        try {
+            localStorage.setItem(this.getHistoryKey(), JSON.stringify(history));
+        } catch (e) {
+            console.error('保存历史记录失败:', e);
+        }
+    }
+
+    addToHistory(query, report, duration, status = 'completed') {
+        console.log('========== 添加历史记录 ==========');
+        console.log('Query:', query.substring(0, 50) + '...');
+        console.log('Report长度:', report ? report.length : 0);
+        console.log('Duration:', duration);
+        console.log('Status:', status);
+        
+        try {
+            const history = this.getHistory();
+            console.log('当前历史记录数:', history.length);
+            
+            const item = {
+                id: Date.now(),
+                query: query,
+                report: report,
+                timestamp: Date.now(),
+                duration: duration,
+                status: status
+            };
+
+            // 添加到开头
+            history.unshift(item);
+
+            // 最多保存20条
+            if (history.length > 20) {
+                history.pop();
+            }
+
+            console.log('准备保存，新历史记录数:', history.length);
+            this.saveHistory(history);
+            this.updateHistoryCount(history);
+            
+            // 验证保存是否成功
+            const verifyHistory = this.getHistory();
+            console.log('验证保存结果:', verifyHistory.length);
+            console.log('========== 历史记录保存完成 ==========');
+        } catch (e) {
+            console.error('添加历史记录时出错:', e);
+        }
+    }
+
+    updateHistoryCount(history) {
+        if (this.historyCount) {
+            this.historyCount.textContent = history.length;
+        }
     }
 
     updateCharCount() {
         const count = this.queryInput.value.length;
-        this.charCount.textContent = count;
+        const maxCount = 500;
+        const percentage = (count / maxCount) * 100;
         
-        if (count > 500) {
-            this.charCountContainer.classList.add('exceeded');
-        } else {
-            this.charCountContainer.classList.remove('exceeded');
+        this.charCount.textContent = count;
+        this.charCountBar.style.width = `${percentage}%`;
+        
+        // 根据进度改变颜色
+        this.charCountBar.classList.remove('warning', 'danger');
+        if (percentage >= 90) {
+            this.charCountBar.classList.add('danger');
+        } else if (percentage >= 70) {
+            this.charCountBar.classList.add('warning');
         }
     }
 
@@ -142,123 +591,509 @@ class App {
         this.isProcessing = true;
         this.processingTime = 0;
         this.currentNodeId = 0;
+        this.currentStepId = 0;
+        this.workflowData = {
+            planner: null,
+            searches: [],
+            verifications: [],
+            report: null
+        };
         
         // 更新状态
         this.updateStatus('working', '智能规划中...');
         this.startTimer();
+        
+        // 更新按钮状态
         this.submitBtn.disabled = true;
-        this.submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">处理中...</span>';
+        this.submitBtn.classList.add('processing');
+        this.submitBtnIcon.textContent = '';
+        this.submitBtnIcon.className = 'btn-loader';
+        this.submitBtnText.textContent = '处理中...';
         
         // 清空画布
         this.workflowNodes.innerHTML = '';
         this.emptyState.style.display = 'none';
+        this.workflowNodes.style.display = 'flex';
         
-        // 添加加载节点
-        this.addLoadingNode('正在启动工作流...');
+        // 初始化工作流模块
+        this.initWorkflowModules();
         
         const callbacks = {
             onOpen: () => {
                 console.log('开始处理任务');
-                // 移除加载节点
-                this.removeLoadingNode();
             },
             onError: (error) => {
-                this.removeLoadingNode();
-                this.addErrorNode('连接失败', '网络波动或服务器暂不可用');
+                this.addErrorStep('连接失败', '网络波动或服务器暂不可用');
                 this.endProcessing();
             },
             start: (data) => {
                 console.log('收到开始事件:', data);
-                // 移除加载节点
-                this.removeLoadingNode();
                 this.updateStatus('working', '开始处理任务...');
+                this.addWorkflowStep('start', '🚀', '任务启动', '开始处理用户请求');
             },
             planner_update: (data) => {
-                this.removeLoadingNode();
-                this.addPlannerNode(data);
+                this.workflowData.planner = data;
+                this.addPlannerSteps(data);
+                this.updateModuleStatus('planner', 'completed');
+                this.updateModuleStatus('executor', 'active');
             },
             search_result: (data) => {
-                this.addSearchNode(data);
+                this.workflowData.searches.push(data);
+                this.addSearchStep(data);
             },
             verification_feedback: (data) => {
-                this.addVerificationNode(data);
+                this.workflowData.verifications.push(data);
+                this.addVerificationStep(data);
+                if (data.is_valid) {
+                    this.updateModuleStatus('executor', 'completed');
+                    this.updateModuleStatus('reporter', 'active');
+                }
             },
             retry_trigger: (data) => {
                 console.log('收到重试事件:', data);
-                // 不再显示重试节点，直接等待报告生成
+                this.addWorkflowStep('retry', '🔄', '重新规划', data.message || '验证失败，正在重新规划...');
             },
             final_report: (data) => {
-                this.addReportNode(data);
+                this.workflowData.report = data;
+                this.addReportStep(data);
+                this.updateModuleStatus('reporter', 'completed');
                 this.updateStatus('completed', '报告已生成 ✅');
+                
+                // 保存到历史记录
+                const duration = this.formatTime(this.processingTime);
+                this.addToHistory(query, data.content, duration, 'completed');
                 this.endProcessing();
                 this.showNotification('任务处理完成', 'success');
             },
             error: (data) => {
-                this.removeLoadingNode();
-                this.addErrorNode('处理失败', data.message || '未知错误');
+                this.addErrorStep('处理失败', data.message || '未知错误');
                 this.endProcessing();
                 this.showNotification('任务处理失败', 'error');
             },
             end: (data) => {
                 console.log('收到结束事件:', data);
-                // 处理结束事件
             }
         };
 
-        this.sseClient.connect(query, callbacks);
+        this.sseClient.connect(query, callbacks, this.currentTemplateId);
     }
 
     endProcessing() {
         this.isProcessing = false;
         this.stopTimer();
+        
+        // 恢复按钮状态
         this.submitBtn.disabled = false;
-        this.submitBtn.innerHTML = '<span class="btn-icon">🚀</span><span class="btn-text">生成报告</span>';
+        this.submitBtn.classList.remove('processing');
+        this.submitBtnIcon.className = 'btn-icon';
+        this.submitBtnIcon.textContent = '🚀';
+        this.submitBtnText.textContent = '生成报告';
+        
         this.sseClient.disconnect();
     }
 
     showNotification(message, type) {
-        // 创建通知元素
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️'
+        };
+        
+        const titles = {
+            success: '成功',
+            error: '错误',
+            warning: '警告'
+        };
+        
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
-        notification.textContent = message;
+        notification.innerHTML = `
+            <span class="notification-icon">${icons[type]}</span>
+            <div class="notification-content">
+                <div class="notification-title">${titles[type]}</div>
+                <div class="notification-message">${message}</div>
+            </div>
+        `;
         
-        // 添加到页面
         document.body.appendChild(notification);
         
-        // 显示通知
         setTimeout(() => {
             notification.classList.add('show');
         }, 100);
         
-        // 3秒后隐藏通知
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (notification.parentNode) {
+                    document.body.removeChild(notification);
+                }
             }, 300);
         }, 3000);
     }
 
-    addLoadingNode(message) {
-        const node = this.createNode('⏳ 处理中');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        content.innerHTML = `
-            <div class="loading-spinner"></div>
-            <p>${message}</p>
+    // ========== 工作流模块管理 ==========
+    
+    initWorkflowModules() {
+        this.workflowNodes.innerHTML = `
+            <div class="workflow-module" id="module-planner">
+                <div class="workflow-module-header">
+                    <div class="module-icon">🧠</div>
+                    <div class="module-title">[Planner] 任务规划</div>
+                    <div class="module-status active" id="status-planner">进行中</div>
+                </div>
+                <div class="workflow-steps" id="steps-planner"></div>
+            </div>
+            
+            <div class="workflow-module" id="module-executor">
+                <div class="workflow-module-header">
+                    <div class="module-icon">🔍</div>
+                    <div class="module-title">[Executor] 信息执行</div>
+                    <div class="module-status pending" id="status-executor">等待中</div>
+                </div>
+                <div class="workflow-steps" id="steps-executor"></div>
+            </div>
+            
+            <div class="workflow-module" id="module-reporter">
+                <div class="workflow-module-header">
+                    <div class="module-icon">📄</div>
+                    <div class="module-title">[Reporter] 报告生成</div>
+                    <div class="module-status pending" id="status-reporter">等待中</div>
+                </div>
+                <div class="workflow-steps" id="steps-reporter"></div>
+            </div>
         `;
-        node.appendChild(content);
-        node.id = 'loading-node';
-        this.workflowNodes.appendChild(node);
+        
+        this.stepsPlanner = document.getElementById('steps-planner');
+        this.stepsExecutor = document.getElementById('steps-executor');
+        this.stepsReporter = document.getElementById('steps-reporter');
+    }
+
+    updateModuleStatus(module, status) {
+        const statusEl = document.getElementById(`status-${module}`);
+        if (statusEl) {
+            statusEl.className = `module-status ${status}`;
+            statusEl.textContent = status === 'active' ? '进行中' : status === 'completed' ? '已完成' : '等待中';
+        }
+    }
+
+    addWorkflowStep(type, icon, title, description, module = 'planner') {
+        const stepId = `step-${this.currentStepId++}`;
+        const timestamp = new Date().toLocaleTimeString('zh-CN', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        });
+        
+        const stepHtml = `
+            <div class="workflow-step" id="${stepId}" data-type="${type}">
+                <div class="step-header">
+                    <div class="step-number">${this.currentStepId}</div>
+                    <div class="step-content-wrapper">
+                        <div class="step-title-row">
+                            <div class="step-title">
+                                <span class="step-icon">${icon}</span>
+                                <span>${title}</span>
+                            </div>
+                            <div class="step-time">${timestamp}</div>
+                        </div>
+                        <div class="step-description">${description}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        let container;
+        switch(module) {
+            case 'planner': container = this.stepsPlanner; break;
+            case 'executor': container = this.stepsExecutor; break;
+            case 'reporter': container = this.stepsReporter; break;
+            default: container = this.stepsPlanner;
+        }
+        
+        if (container) {
+            container.insertAdjacentHTML('beforeend', stepHtml);
+            this.scrollToBottom();
+        }
+        
+        return stepId;
+    }
+
+    addPlannerSteps(data) {
+        // 添加规划步骤
+        const stepId = this.addWorkflowStep(
+            'planner', 
+            '📋', 
+            '任务规划完成', 
+            `已拆解为 ${data.plan.length} 个执行步骤`,
+            'planner'
+        );
+        
+        // 添加可折叠的详细计划
+        const stepEl = document.getElementById(stepId);
+        const detailsHtml = `
+            <div class="step-details collapsed" id="${stepId}-details">
+                <ul class="plan-list">
+                    ${data.plan.map((item, idx) => `<li>${idx + 1}. ${item}</li>`).join('')}
+                </ul>
+            </div>
+            <button class="step-toggle" onclick="this.classList.toggle('expanded'); document.getElementById('${stepId}-details').classList.toggle('collapsed')">
+                <span>查看详情</span>
+                <span class="step-toggle-icon">▼</span>
+            </button>
+        `;
+        
+        stepEl.insertAdjacentHTML('beforeend', detailsHtml);
         this.scrollToBottom();
     }
 
-    removeLoadingNode() {
-        const loadingNode = document.getElementById('loading-node');
-        if (loadingNode) {
-            loadingNode.remove();
+    addSearchStep(data) {
+        const stepId = this.addWorkflowStep(
+            'search', 
+            '🔍', 
+            '信息检索', 
+            `搜索：${data.query.substring(0, 50)}${data.query.length > 50 ? '...' : ''}`,
+            'executor'
+        );
+        
+        // 添加可折叠的搜索结果
+        const stepEl = document.getElementById(stepId);
+        const detailsHtml = `
+            <div class="step-details collapsed" id="${stepId}-details">
+                <div class="search-results">
+                    <div class="search-item">
+                        <div class="search-query">${data.query}</div>
+                        <div class="search-snippet">${data.snippet}</div>
+                    </div>
+                </div>
+            </div>
+            <button class="step-toggle" onclick="this.classList.toggle('expanded'); document.getElementById('${stepId}-details').classList.toggle('collapsed')">
+                <span>查看结果</span>
+                <span class="step-toggle-icon">▼</span>
+            </button>
+        `;
+        
+        stepEl.insertAdjacentHTML('beforeend', detailsHtml);
+        this.scrollToBottom();
+    }
+
+    addVerificationStep(data) {
+        const isValid = data.is_valid;
+        const stepId = this.addWorkflowStep(
+            'verification', 
+            isValid ? '✅' : '⚠️', 
+            '质量校验', 
+            data.reason,
+            'executor'
+        );
+        
+        const stepEl = document.getElementById(stepId);
+        stepEl.classList.add(isValid ? 'completed' : 'warning');
+        
+        // 更新步骤序号样式
+        const stepNumber = stepEl.querySelector('.step-number');
+        if (stepNumber) {
+            stepNumber.classList.add(isValid ? 'completed' : 'error');
+        }
+        
+        this.scrollToBottom();
+    }
+
+    addReportStep(data) {
+        const stepId = this.addWorkflowStep(
+            'report', 
+            '📄', 
+            '报告生成完成', 
+            '结构化报告已生成，点击下方按钮查看或导出',
+            'reporter'
+        );
+        
+        const stepEl = document.getElementById(stepId);
+        const stepNumber = stepEl.querySelector('.step-number');
+        if (stepNumber) {
+            stepNumber.classList.add('completed');
+        }
+        
+        // 保存报告内容供导出使用
+        this.currentReportContent = data.content;
+        this.currentReportTitle = data.title || '报告';
+        
+        // 添加可折叠的报告内容
+        const formattedContent = this.formatReportContent(data.content);
+        const detailsHtml = `
+            <div class="step-details collapsed" id="${stepId}-details">
+                <div class="report-content">${formattedContent}</div>
+                <div class="report-actions">
+                    <button class="report-action-btn" onclick="navigator.clipboard.writeText(\`${data.content.replace(/`/g, '\\`')}\`).then(() => alert('已复制到剪贴板'))">
+                        📋 复制全文
+                    </button>
+                    <button class="report-action-btn export-btn" onclick="app.exportReport('txt')">
+                        📝 导出TXT
+                    </button>
+                    <button class="report-action-btn export-btn" onclick="app.exportReport('markdown')">
+                        📝 导出Markdown
+                    </button>
+                    <button class="report-action-btn export-btn" onclick="app.exportReport('word')">
+                        📄 导出Word
+                    </button>
+                    <button class="report-action-btn export-btn" onclick="app.exportReport('pdf')">
+                        📕 导出PDF
+                    </button>
+                </div>
+            </div>
+            <button class="step-toggle" onclick="this.classList.toggle('expanded'); document.getElementById('${stepId}-details').classList.toggle('collapsed')">
+                <span>查看报告</span>
+                <span class="step-toggle-icon">▼</span>
+            </button>
+        `;
+        
+        stepEl.insertAdjacentHTML('beforeend', detailsHtml);
+        this.scrollToBottom();
+    }
+
+    // 导出报告方法
+    async exportReport(format) {
+        if (!this.currentReportContent) {
+            alert('没有可导出的报告内容');
+            return;
+        }
+        
+        try {
+            const response = await fetch('http://localhost:8000/api/export', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: this.currentReportContent,
+                    format: format,
+                    title: this.currentReportTitle
+                })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || '导出失败');
+            }
+            
+            // 获取文件名
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = `report.${format === 'word' ? 'docx' : format === 'markdown' ? 'md' : format}`;
+            if (contentDisposition) {
+                const match = contentDisposition.match(/filename=(.+)/);
+                if (match) {
+                    filename = match[1];
+                }
+            }
+            
+            // 下载文件
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+        } catch (error) {
+            console.error('导出失败:', error);
+            alert('导出失败: ' + error.message);
         }
     }
+
+    addErrorStep(title, message) {
+        const stepId = this.addWorkflowStep('error', '❌', title, message, 'reporter');
+        const stepEl = document.getElementById(stepId);
+        const stepNumber = stepEl.querySelector('.step-number');
+        if (stepNumber) {
+            stepNumber.classList.add('error');
+        }
+        stepEl.classList.add('error');
+        this.scrollToBottom();
+    }
+
+    // ========== 报告内容格式化 ==========
+
+    formatReportContent(content) {
+        if (!content) return '';
+        
+        // 处理内容：先标准化换行符
+        let text = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        
+        // 关键修复：在Markdown标题前强制插入换行符
+        text = text.replace(/\s*(#{1,4}\s+[^#]+?)(?=\s*#{1,4}\s+|$)/g, '\n\n$1\n\n');
+        
+        // 清理多余的换行
+        text = text.replace(/\n{3,}/g, '\n\n').trim();
+        
+        // 按双换行分割成段落
+        const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
+        
+        // 处理每个段落
+        const formattedBlocks = paragraphs.map(para => {
+            const trimmed = para.trim();
+            
+            // 一级标题 # 
+            if (trimmed.match(/^#\s+/)) {
+                return '<h1 class="report-h1">📋 ' + trimmed.replace(/^#\s+/, '') + '</h1>';
+            }
+            // 二级标题 ## 
+            if (trimmed.match(/^##\s+/)) {
+                return '<h2 class="report-h2">📌 ' + trimmed.replace(/^##\s+/, '') + '</h2>';
+            }
+            // 三级标题 ### 
+            if (trimmed.match(/^###\s+/)) {
+                return '<h3 class="report-h3">🔹 ' + trimmed.replace(/^###\s+/, '') + '</h3>';
+            }
+            // 四级标题 #### 
+            if (trimmed.match(/^####\s+/)) {
+                return '<h4 class="report-h4">🔸 ' + trimmed.replace(/^####\s+/, '') + '</h4>';
+            }
+            
+            // 检测并处理列表项
+            if (trimmed.includes('* ') || trimmed.includes('- ')) {
+                const items = trimmed.split(/\s*[*\-]\s+/).filter(item => item.trim());
+                if (items.length > 1 || (items.length === 1 && trimmed.match(/^[*\-]\s/))) {
+                    return '<ul class="report-ul">' + 
+                        items.map(item => '<li class="report-li">✅ ' + this.formatInline(item.trim()) + '</li>').join('') + 
+                        '</ul>';
+                }
+            }
+            
+            // 数字列表
+            if (trimmed.match(/^\d+\.\s/)) {
+                const lines = trimmed.split('\n').filter(l => l.trim());
+                const items = lines.filter(l => l.match(/^\d+\.\s/));
+                if (items.length > 0) {
+                    return '<ol class="report-ol-list">' + 
+                        items.map((item, idx) => {
+                            const text = item.replace(/^\d+\.\s*/, '');
+                            return '<li class="report-ol"><span class="ol-number">' + (idx + 1) + '</span> ' + this.formatInline(text) + '</li>';
+                        }).join('') + 
+                        '</ol>';
+                }
+            }
+            
+            // 普通段落
+            const sentences = trimmed.split(/(?<=[。！？.!?])\s+/).filter(s => s.trim());
+            if (sentences.length > 1) {
+                return '<p class="report-p">' + sentences.map(s => this.formatInline(s.trim())).join('<br>') + '</p>';
+            }
+            
+            return '<p class="report-p">' + this.formatInline(trimmed) + '</p>';
+        });
+        
+        return formattedBlocks.join('\n');
+    }
+    
+    formatInline(text) {
+        return text
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    }
+
+    // ========== 状态和时间管理 ==========
 
     updateStatus(status, text) {
         this.statusDot.className = `status-dot ${status}`;
@@ -286,213 +1121,27 @@ class App {
         this.timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
-    addPlannerNode(data) {
-        const node = this.createNode('🧠 [Planner] 任务规划');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        
-        const planList = data.plan.map((step, index) => `<li>${index + 1}. ${step}</li>`).join('');
-        
-        content.innerHTML = `
-            <p>✓ 拆解为 ${data.plan.length} 个步骤：</p>
-            <ul class="plan-list">${planList}</ul>
-        `;
-        
-        node.appendChild(content);
-        this.workflowNodes.appendChild(node);
-        this.scrollToBottom();
-    }
-
-    addSearchNode(data) {
-        const node = this.createNode('🔍 [Executor] 信息执行');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        
-        content.innerHTML = `
-            <div class="search-item">
-                <div class="search-query">🌐 搜索：${data.query}</div>
-                <div class="search-snippet">${data.snippet}</div>
-            </div>
-        `;
-        
-        node.appendChild(content);
-        this.workflowNodes.appendChild(node);
-        this.scrollToBottom();
-    }
-
-    addVerificationNode(data) {
-        const node = this.createNode('✅ [Verifier] 质量校验');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        
-        const statusClass = data.is_valid ? 'valid' : 'invalid';
-        const statusText = data.is_valid ? '✓ 验证通过' : '⚠️ 验证失败';
-        
-        content.innerHTML = `
-            <div class="verification-status ${statusClass}">
-                ${statusText}
-            </div>
-            <p>${data.reason}</p>
-            ${data.is_valid ? '<div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>' : ''}
-        `;
-        
-        node.appendChild(content);
-        
-        if (!data.is_valid) {
-            node.classList.add('shaking');
+    formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        if (minutes > 0) {
+            return `${minutes}分${secs}秒`;
         }
-        
-        this.workflowNodes.appendChild(node);
-        this.scrollToBottom();
-    }
-
-    addReportNode(data) {
-        const node = this.createNode('📄 [Final Report] 生成报告');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        
-        content.innerHTML = `
-            <div class="report-content">${data.content}</div>
-            <div class="report-actions">
-                <button class="report-action-btn copy-btn">复制</button>
-                <button class="report-action-btn export-btn">导出TXT</button>
-            </div>
-        `;
-        
-        node.appendChild(content);
-        this.workflowNodes.appendChild(node);
-        
-        // 绑定复制和导出按钮事件
-        const copyBtn = content.querySelector('.copy-btn');
-        const exportBtn = content.querySelector('.export-btn');
-        
-        copyBtn.addEventListener('click', () => this.copyReport(data.content, copyBtn));
-        exportBtn.addEventListener('click', () => this.exportReport(data.content));
-        
-        this.scrollToBottom();
-    }
-
-    addErrorNode(title, message) {
-        const node = this.createNode('❌ 错误');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        
-        content.innerHTML = `
-            <p>${title}</p>
-            <div class="error-message">
-                <span>🔄</span>
-                ${message}
-            </div>
-            <button class="retry-btn">重试</button>
-        `;
-        
-        node.appendChild(content);
-        this.workflowNodes.appendChild(node);
-        
-        // 绑定重试按钮事件
-        const retryBtn = content.querySelector('.retry-btn');
-        retryBtn.addEventListener('click', () => {
-            const query = this.queryInput.value.trim();
-            if (query) {
-                this.startProcessing(query);
-            }
-        });
-        
-        this.scrollToBottom();
-    }
-
-    addRetryNode(data) {
-        const node = this.createNode('🔄 重试');
-        const content = document.createElement('div');
-        content.className = 'node-content';
-        
-        content.innerHTML = `
-            <p>验证失败，正在重新规划...</p>
-            <div class="retry-info">
-                <span>重试次数: ${data.retry_count}</span>
-                <span>${data.message}</span>
-            </div>
-        `;
-        
-        node.appendChild(content);
-        this.workflowNodes.appendChild(node);
-        this.scrollToBottom();
-    }
-
-    createNode(title) {
-        const node = document.createElement('div');
-        node.className = 'workflow-node entering';
-        node.id = `node-${this.currentNodeId++}`;
-        
-        const timestamp = new Date().toLocaleTimeString();
-        
-        const header = document.createElement('div');
-        header.className = 'node-header';
-        header.innerHTML = `
-            <div class="node-title">${title}</div>
-            <div class="node-timestamp">${timestamp}</div>
-        `;
-        
-        node.appendChild(header);
-        
-        // 添加活跃状态
-        setTimeout(() => {
-            node.classList.add('active');
-            // 移除其他节点的活跃状态
-            const allNodes = this.workflowNodes.querySelectorAll('.workflow-node');
-            allNodes.forEach(n => {
-                if (n !== node) {
-                    n.classList.remove('active');
-                }
-            });
-        }, 100);
-        
-        return node;
-    }
-
-    copyReport(content, button) {
-        navigator.clipboard.writeText(content).then(() => {
-            const originalText = button.textContent;
-            button.textContent = '✓ 已复制';
-            button.classList.add('copied');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('copied');
-            }, 2000);
-        }).catch(err => {
-            console.error('复制失败:', err);
-            alert('复制失败，请手动复制');
-        });
-    }
-
-    exportReport(content) {
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `report_${new Date().getTime()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        return `${secs}秒`;
     }
 
     scrollToBottom() {
-        // 滚动到右侧面板的底部
         const rightPanel = document.querySelector('.right-panel');
         if (rightPanel) {
             rightPanel.scrollTop = rightPanel.scrollHeight;
         }
-        // 同时滚动到工作流画布的底部
         if (this.workflowCanvas) {
             this.workflowCanvas.scrollTop = this.workflowCanvas.scrollHeight;
         }
     }
-
-
 }
 
+// 初始化应用
 document.addEventListener('DOMContentLoaded', () => {
     new App();
 });

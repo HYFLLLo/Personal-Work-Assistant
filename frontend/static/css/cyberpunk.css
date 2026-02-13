@@ -1,0 +1,3127 @@
+/* ========== 赛博朋克主题增强样式 ========== */
+/* 注意：此文件只添加视觉效果，不改变布局结构 */
+
+/* Logo霓虹效果 */
+.logo {
+    color: var(--cyber-blue);
+    text-shadow: 
+        0 0 10px rgba(10, 132, 255, 0.8),
+        0 0 20px rgba(10, 132, 255, 0.4);
+    animation: logoPulse 3s infinite;
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(10, 132, 255, 0.8),
+            0 0 20px rgba(10, 132, 255, 0.4);
+    }
+    50% {
+        text-shadow: 
+            0 0 15px rgba(10, 132, 255, 1),
+            0 0 30px rgba(10, 132, 255, 0.6);
+    }
+}
+
+/* 顶部状态栏霓虹边框 */
+.top-bar {
+    border-bottom: 1px solid rgba(10, 132, 255, 0.3);
+    box-shadow: 
+        0 2px 20px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(10, 132, 255, 0.1);
+}
+
+/* 左侧面板霓虹边框 */
+.left-panel {
+    border-right: 1px solid rgba(10, 132, 255, 0.2);
+    box-shadow: 
+        4px 0 20px rgba(0, 0, 0, 0.4),
+        inset -1px 0 0 rgba(10, 132, 255, 0.1);
+}
+
+/* 面板标题霓虹效果 */
+.panel-header h2 {
+    color: var(--cyber-blue);
+    text-shadow: 0 0 10px rgba(10, 132, 255, 0.5);
+}
+
+/* 任务卡片悬停发光 */
+.task-card:hover {
+    border-color: rgba(10, 132, 255, 0.5);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(10, 132, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* 输入框聚焦霓虹 */
+#queryInput:focus {
+    border-color: var(--cyber-blue);
+    box-shadow: 
+        0 0 0 3px rgba(10, 132, 255, 0.2),
+        0 0 20px rgba(10, 132, 255, 0.3);
+}
+
+/* 生成按钮霓虹 */
+.generate-btn {
+    background: linear-gradient(135deg, var(--cyber-blue) 0%, var(--cyber-cyan) 100%);
+    box-shadow: 
+        0 4px 15px rgba(10, 132, 255, 0.4),
+        0 0 20px rgba(10, 132, 255, 0.3);
+    animation: btnGlow 2s infinite;
+}
+
+@keyframes btnGlow {
+    0%, 100% {
+        box-shadow: 
+            0 4px 15px rgba(10, 132, 255, 0.4),
+            0 0 20px rgba(10, 132, 255, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 4px 20px rgba(10, 132, 255, 0.6),
+            0 0 30px rgba(10, 132, 255, 0.5);
+    }
+}
+
+.generate-btn:hover {
+    box-shadow: 
+        0 6px 25px rgba(10, 132, 255, 0.6),
+        0 0 40px rgba(10, 132, 255, 0.4);
+}
+
+/* 预设问题卡片霓虹 */
+.preset-item:hover {
+    border-color: rgba(10, 132, 255, 0.5);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(10, 132, 255, 0.2);
+}
+
+/* 工作流步骤激活状态 */
+.workflow-step.active {
+    border-color: var(--cyber-blue);
+    box-shadow: 
+        0 0 20px rgba(10, 132, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.workflow-step.active .step-number {
+    box-shadow: 0 0 15px rgba(10, 132, 255, 0.6);
+}
+
+/* 状态指示器发光 */
+.status-indicator {
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.2);
+}
+
+.status-indicator.active {
+    box-shadow: 0 0 15px rgba(10, 132, 255, 0.5);
+}
+
+/* 滚动条赛博朋克风格 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(10, 132, 255, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--cyber-blue), var(--cyber-cyan));
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--cyber-cyan), var(--cyber-blue));
+    box-shadow: 0 0 15px rgba(10, 132, 255, 0.8);
+}
+
+/* 历史记录卡片霓虹 */
+.history-item:hover {
+    border-color: rgba(10, 132, 255, 0.4);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(10, 132, 255, 0.15);
+}
+
+/* 模态框霓虹边框 */
+.modal-content {
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(10, 132, 255, 0.2);
+}
+
+/* 报告操作按钮霓虹 */
+.report-action-btn:hover {
+    box-shadow: 0 0 15px currentColor;
+}
+
+/* 空状态AI图标发光 */
+.ai-robot-icon {
+    width: 120px;
+    height: 120px;
+    filter: drop-shadow(0 0 10px rgba(10, 132, 255, 0.5));
+    animation: iconGlow 3s infinite;
+}
+
+@keyframes iconGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(10, 132, 255, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(10, 132, 255, 0.8));
+    }
+}
+
+/* 状态指示器发光 */
+.status-indicator {
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.2);
+}
+
+/* ========================================
+   全屏矩阵雨效果 - 赛博朋克风格（柔和版）
+   ======================================== */
+
+.matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+}
+
+/* 矩阵列 - 垂直下落 */
+.matrix-column {
+    position: absolute;
+    top: -100px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(100, 200, 150, 0.6);
+    text-shadow: none;
+    animation: matrixFall linear infinite;
+    white-space: pre;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 3px;
+}
+
+/* 不同亮度的列 - 降低亮度 */
+.matrix-column.bright {
+    color: rgba(150, 220, 180, 0.5);
+    text-shadow: 0 0 3px rgba(100, 200, 150, 0.3);
+    font-weight: normal;
+}
+
+.matrix-column.dim {
+    color: rgba(80, 160, 120, 0.3);
+    text-shadow: none;
+}
+
+/* 下落动画 - 更慢更柔和 */
+@keyframes matrixFall {
+    0% { 
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    10% { 
+        opacity: 0.4;
+    }
+    90% { 
+        opacity: 0.4;
+    }
+    100% { 
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+/* 头部高亮效果 - 移除 */
+.matrix-column::first-letter {
+    color: inherit;
+    text-shadow: none;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+/* 扫描线效果 - 移除 */
+.matrix-rain::after {
+    display: none;
+}
+
+/* 故障效果覆盖层 - 移除 */
+.matrix-rain::before {
+    display: none;
+}
+
+/* ========================================
+   赛博朋克风格模板选择器
+   ======================================== */
+
+/* 选择器容器 */
+.template-selector {
+    position: relative;
+    background: linear-gradient(145deg, rgba(10, 25, 47, 0.9), rgba(15, 35, 60, 0.95));
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.template-selector:hover {
+    border-color: rgba(10, 132, 255, 0.5);
+    box-shadow: 
+        0 6px 30px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(10, 132, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.template-selector.expanded {
+    border-color: rgba(10, 132, 255, 0.6);
+    box-shadow: 
+        0 8px 40px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(10, 132, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* 选择器头部 */
+.template-selector-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    background: linear-gradient(145deg, rgba(20, 40, 70, 0.8), rgba(15, 35, 60, 0.9));
+    border-bottom: 1px solid rgba(10, 132, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.template-selector-header:hover {
+    background: linear-gradient(145deg, rgba(25, 50, 85, 0.9), rgba(20, 45, 75, 0.95));
+}
+
+.template-selector.expanded .template-selector-header {
+    background: linear-gradient(145deg, rgba(30, 60, 100, 0.9), rgba(25, 55, 90, 0.95));
+    border-bottom-color: rgba(10, 132, 255, 0.4);
+}
+
+/* 图标 */
+.template-icon {
+    font-size: 18px;
+    filter: drop-shadow(0 0 5px rgba(10, 132, 255, 0.5));
+}
+
+/* 标签 */
+.template-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(200, 220, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 已选内容 */
+.template-selected {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--cyber-cyan);
+    font-weight: 500;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* 下拉箭头 */
+.template-arrow {
+    font-size: 10px;
+    color: rgba(10, 132, 255, 0.8);
+    transition: transform 0.3s ease;
+}
+
+.template-selector.expanded .template-arrow {
+    transform: rotate(180deg);
+    color: var(--cyber-cyan);
+}
+
+/* 下拉菜单 */
+.template-dropdown {
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+    background: linear-gradient(180deg, rgba(10, 25, 47, 0.98), rgba(8, 20, 40, 0.99));
+    animation: dropdownSlide 0.3s ease;
+}
+
+.template-dropdown[style*="block"] {
+    display: block;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 分类标题 */
+.template-category-title {
+    padding: 12px 16px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(10, 132, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(10, 132, 255, 0.1);
+    background: linear-gradient(90deg, rgba(10, 132, 255, 0.1), transparent);
+}
+
+/* 卡片网格布局 */
+.template-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    padding: 12px;
+}
+
+/* 卡片项 */
+.template-item {
+    position: relative;
+    background: linear-gradient(145deg, rgba(20, 40, 70, 0.8), rgba(15, 35, 60, 0.9));
+    border: 1px solid rgba(10, 132, 255, 0.2);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.template-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(10, 132, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.template-item:hover::before {
+    left: 100%;
+}
+
+.template-item:hover {
+    border-color: rgba(10, 132, 255, 0.5);
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(10, 132, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.template-item.active {
+    border-color: var(--cyber-cyan);
+    background: linear-gradient(145deg, rgba(20, 60, 100, 0.9), rgba(15, 50, 85, 0.95));
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.template-item.active::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    background: var(--cyber-cyan);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* 卡片图标 */
+.template-item-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+    filter: drop-shadow(0 0 5px rgba(10, 132, 255, 0.3));
+}
+
+/* 卡片信息 */
+.template-item-info {
+    position: relative;
+    z-index: 1;
+}
+
+.template-item-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.template-item-desc {
+    font-size: 11px;
+    color: rgba(180, 200, 230, 0.7);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 加载状态 */
+.template-loading {
+    padding: 30px;
+    text-align: center;
+    color: rgba(10, 132, 255, 0.8);
+    font-size: 13px;
+}
+
+.template-loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(10, 132, 255, 0.3);
+    border-top-color: var(--cyber-cyan);
+    border-radius: 50%;
+    margin-left: 10px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 错误状态 */
+.template-error {
+    padding: 20px;
+    text-align: center;
+    color: rgba(255, 100, 100, 0.9);
+}
+
+.template-error button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: rgba(10, 132, 255, 0.2);
+    border: 1px solid rgba(10, 132, 255, 0.4);
+    border-radius: 6px;
+    color: rgba(200, 220, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.template-error button:hover {
+    background: rgba(10, 132, 255, 0.3);
+    border-color: rgba(10, 132, 255, 0.6);
+}
+
+/* 空状态 */
+.template-empty {
+    padding: 30px;
+    text-align: center;
+    color: rgba(180, 200, 230, 0.6);
+    font-size: 13px;
+}
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+    .template-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 自定义滚动条 */
+.template-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.template-dropdown::-webkit-scrollbar-track {
+    background: rgba(10, 132, 255, 0.05);
+}
+
+.template-dropdown::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(10, 132, 255, 0.5), rgba(0, 255, 255, 0.5));
+    border-radius: 3px;
+}
+
+/* ========================================
+   赛博朋克风格历史记录弹窗 - 完整版
+   ======================================== */
+
+/* 历史记录弹窗内容 */
+.history-modal-content {
+    background: linear-gradient(145deg, rgba(10, 20, 40, 0.98), rgba(8, 15, 35, 0.99));
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(10, 132, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* 弹窗头部 */
+.history-modal-header {
+    background: linear-gradient(90deg, rgba(10, 30, 60, 0.9), rgba(15, 40, 80, 0.95));
+    border-bottom: 1px solid rgba(10, 132, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* 历史记录图标 - 赛博朋克风格 */
+.history-modal-icon {
+    width: 36px;
+    height: 36px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.history-modal-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--cyber-cyan);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { 
+        filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+        stroke: var(--cyber-cyan);
+    }
+    50% { 
+        filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.9));
+        stroke: rgba(255, 0, 255, 0.9);
+    }
+}
+
+/* 标题区域 */
+.history-modal-title-area {
+    flex: 1;
+}
+
+/* 标题"历史记录" - 赛博朋克风格 */
+.history-modal-header h3 {
+    color: var(--cyber-cyan);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.5),
+        0 0 30px rgba(0, 255, 255, 0.3);
+    animation: glitchText 3s infinite;
+    position: relative;
+    margin: 0;
+    display: inline-block;
+}
+
+/* 故障艺术效果 */
+.history-modal-header h3::before,
+.history-modal-header h3::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.history-modal-header h3::before {
+    color: rgba(255, 0, 255, 0.8);
+    animation: glitch1 2s infinite linear alternate-reverse;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+
+.history-modal-header h3::after {
+    color: rgba(0, 255, 255, 0.8);
+    animation: glitch2 3s infinite linear alternate-reverse;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchText {
+    0%, 90%, 100% {
+        text-shadow: 
+            0 0 10px rgba(0, 255, 255, 0.8),
+            0 0 20px rgba(0, 255, 255, 0.5),
+            0 0 30px rgba(0, 255, 255, 0.3);
+    }
+    92% {
+        text-shadow: 
+            2px 0 10px rgba(255, 0, 255, 0.8),
+            -2px 0 20px rgba(0, 255, 255, 0.5);
+    }
+    94% {
+        text-shadow: 
+            -2px 0 10px rgba(0, 255, 255, 0.8),
+            2px 0 20px rgba(255, 0, 255, 0.5);
+    }
+}
+
+@keyframes glitch1 {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-1px); }
+    80% { transform: translateX(1px); }
+}
+
+@keyframes glitch2 {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(2px); }
+    40% { transform: translateX(-2px); }
+    60% { transform: translateX(1px); }
+    80% { transform: translateX(-1px); }
+}
+
+/* 头部装饰线条 */
+.history-modal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.8), 
+        rgba(255, 0, 255, 0.8), 
+        rgba(0, 255, 255, 0.8), 
+        transparent
+    );
+    animation: scanline 4s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* 历史记录数量徽章 - 赛博朋克风格 */
+.history-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    margin-left: 12px;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.15) 0%, 
+        rgba(255, 0, 255, 0.15) 50%,
+        rgba(0, 255, 255, 0.15) 100%
+    );
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    border-radius: 4px;
+    color: #00ffff;
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    text-shadow: 
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.5),
+        0 0 20px rgba(0, 255, 255, 0.3);
+    box-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.2),
+        inset 0 0 10px rgba(0, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: badgeGlow 2s ease-in-out infinite;
+    clip-path: polygon(
+        0 0, 
+        calc(100% - 6px) 0, 
+        100% 6px, 
+        100% 100%, 
+        6px 100%, 
+        0 calc(100% - 6px)
+    );
+}
+
+/* 数字发光动画 */
+@keyframes badgeGlow {
+    0%, 100% {
+        border-color: rgba(0, 255, 255, 0.4);
+        box-shadow: 
+            0 0 10px rgba(0, 255, 255, 0.2),
+            inset 0 0 10px rgba(0, 255, 255, 0.1);
+        text-shadow: 
+            0 0 5px rgba(0, 255, 255, 0.8),
+            0 0 10px rgba(0, 255, 255, 0.5);
+    }
+    50% {
+        border-color: rgba(255, 0, 255, 0.6);
+        box-shadow: 
+            0 0 15px rgba(255, 0, 255, 0.3),
+            inset 0 0 15px rgba(255, 0, 255, 0.15);
+        text-shadow: 
+            0 0 5px rgba(255, 0, 255, 0.9),
+            0 0 15px rgba(255, 0, 255, 0.6),
+            0 0 25px rgba(255, 0, 255, 0.4);
+    }
+}
+
+/* 故障艺术效果 */
+.history-count-badge::before {
+    content: attr(data-count);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff00ff;
+    opacity: 0;
+    animation: glitchEffect 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes glitchEffect {
+    0%, 90%, 100% {
+        opacity: 0;
+        transform: translate(0);
+    }
+    92% {
+        opacity: 0.8;
+        transform: translate(-2px, 1px);
+    }
+    94% {
+        opacity: 0.6;
+        transform: translate(2px, -1px);
+    }
+    96% {
+        opacity: 0.9;
+        transform: translate(-1px, 2px);
+    }
+    98% {
+        opacity: 0.4;
+        transform: translate(1px, -2px);
+    }
+}
+
+/* 扫描线效果 */
+.history-count-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.4), 
+        transparent
+    );
+    animation: badgeScanline 3s linear infinite;
+}
+
+@keyframes badgeScanline {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* 数字变化时的闪烁效果 */
+.history-count-badge.updating {
+    animation: badgeUpdate 0.5s ease;
+}
+
+@keyframes badgeUpdate {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.2);
+        filter: brightness(1.5);
+    }
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
+
+/* 关闭按钮 */
+.history-modal-close {
+    background: rgba(20, 40, 70, 0.8);
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    color: rgba(200, 220, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.history-modal-close:hover {
+    background: rgba(255, 71, 87, 0.2);
+    border-color: rgba(255, 71, 87, 0.5);
+    color: rgba(255, 100, 100, 0.9);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.3);
+}
+
+/* 搜索区域 - 赛博朋克风格 */
+.history-search-section {
+    padding: 16px 24px;
+    background: linear-gradient(180deg, rgba(10, 25, 50, 0.8), rgba(8, 20, 40, 0.9));
+    border-bottom: 1px solid rgba(10, 132, 255, 0.2);
+}
+
+/* 搜索框容器 */
+.history-search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* 搜索框 - 赛博朋克风格 */
+.history-search-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: linear-gradient(145deg, rgba(15, 35, 65, 0.9), rgba(10, 28, 55, 0.95));
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 4px;
+    color: rgba(220, 240, 255, 0.95);
+    font-size: 14px;
+    font-family: 'Roboto Mono', monospace;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(0, 255, 255, 0.1);
+    clip-path: polygon(
+        0 0, 
+        calc(100% - 8px) 0, 
+        100% 8px, 
+        100% 100%, 
+        8px 100%, 
+        0 calc(100% - 8px)
+    );
+}
+
+/* 搜索框聚焦状态 */
+.history-search-input:focus {
+    outline: none;
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.3),
+        inset 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(145deg, rgba(20, 40, 70, 0.95), rgba(15, 35, 60, 1));
+}
+
+/* 搜索框占位符 */
+.history-search-input::placeholder {
+    color: rgba(150, 180, 220, 0.5);
+    font-style: italic;
+}
+
+/* 搜索框悬停效果 */
+.history-search-input:hover {
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.2),
+        inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 搜索框发光边框动画 */
+.history-search-container::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(0, 255, 255, 0), 
+        rgba(0, 255, 255, 0.3), 
+        rgba(255, 0, 255, 0.3), 
+        rgba(0, 255, 255, 0)
+    );
+    border-radius: 6px;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    filter: blur(4px);
+}
+
+.history-search-container:focus-within::after {
+    opacity: 1;
+    animation: borderGlow 2s linear infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { 
+        background: linear-gradient(45deg, 
+            rgba(0, 255, 255, 0), 
+            rgba(0, 255, 255, 0.3), 
+            rgba(255, 0, 255, 0.3), 
+            rgba(0, 255, 255, 0)
+        );
+    }
+    50% { 
+        background: linear-gradient(45deg, 
+            rgba(255, 0, 255, 0), 
+            rgba(255, 0, 255, 0.3), 
+            rgba(0, 255, 255, 0.3), 
+            rgba(255, 0, 255, 0)
+        );
+    }
+}
+
+/* 输入时的脉冲效果 */
+.history-search-input:not(:placeholder-shown) {
+    border-color: rgba(0, 255, 136, 0.6);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 136, 0.2),
+        inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   历史记录列表项 - 赛博朋克风格
+   ======================================== */
+
+/* 历史记录项 - 赛博朋克卡片 */
+.history-list-item,
+.history-item {
+    background: linear-gradient(145deg, rgba(15, 35, 65, 0.9), rgba(10, 25, 50, 0.95));
+    border: 1px solid rgba(10, 132, 255, 0.2);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* 历史记录项默认展开显示报告内容 */
+.history-item.expanded,
+.history-list-item.expanded {
+    border-color: rgba(10, 132, 255, 0.4);
+}
+
+.history-list-item:hover,
+.history-item:hover {
+    border-color: rgba(10, 132, 255, 0.5);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(10, 132, 255, 0.2);
+    transform: translateX(4px);
+}
+
+/* 历史记录头部 */
+.history-item-header,
+.history-list-item-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    background: linear-gradient(90deg, rgba(20, 45, 80, 0.6), transparent);
+    border-bottom: 1px solid rgba(10, 132, 255, 0.1);
+}
+
+/* 状态图标 - 赛博朋克风格 */
+.history-item-status-icon,
+.history-status-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.history-item-status-icon svg,
+.history-status-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* 完成状态 - 绿色霓虹 */
+.history-item-status-icon.completed svg,
+.history-status-icon.completed svg,
+.history-item-status-icon.success svg,
+.history-status-icon.success svg {
+    stroke: rgba(0, 255, 136, 0.9);
+    filter: drop-shadow(0 0 5px rgba(0, 255, 136, 0.6));
+}
+
+/* 错误状态 - 红色霓虹 */
+.history-item-status-icon.error svg,
+.history-status-icon.error svg {
+    stroke: rgba(255, 80, 100, 0.9);
+    filter: drop-shadow(0 0 5px rgba(255, 80, 100, 0.6));
+}
+
+/* 历史记录内容 */
+.history-item-content,
+.history-list-item-content {
+    flex: 1;
+}
+
+.history-item-query,
+.history-list-item .history-item-query {
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.history-item-meta,
+.history-list-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.history-item-time,
+.history-list-item-time {
+    color: rgba(150, 180, 220, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 时间图标 */
+.history-item-time svg,
+.history-list-item-time svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: rgba(150, 180, 220, 0.7);
+    stroke-width: 1.5;
+}
+
+/* 状态标签 */
+.history-item-status,
+.history-list-item-status {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history-item-status.completed,
+.history-list-item-status.completed {
+    background: rgba(0, 208, 132, 0.15);
+    color: rgba(0, 255, 136, 0.9);
+    border: 1px solid rgba(0, 208, 132, 0.3);
+    box-shadow: 0 0 8px rgba(0, 208, 132, 0.2);
+}
+
+.history-item-status.error,
+.history-list-item-status.error {
+    background: rgba(255, 71, 87, 0.15);
+    color: rgba(255, 100, 100, 0.9);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    box-shadow: 0 0 8px rgba(255, 71, 87, 0.2);
+}
+
+/* 展开箭头 */
+.history-item-expand,
+.history-list-item-expand {
+    color: rgba(10, 132, 255, 0.6);
+    transition: all 0.3s ease;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-item-expand svg,
+.history-list-item-expand svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: rgba(10, 132, 255, 0.6);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+}
+
+/* 展开箭头悬停效果 */
+.history-item-expand:hover,
+.history-list-item-expand:hover {
+    cursor: pointer;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.history-item-expand:hover svg,
+.history-list-item-expand:hover svg {
+    stroke: var(--cyber-cyan);
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+}
+
+.history-item.expanded .history-item-expand svg,
+.history-list-item.expanded .history-list-item-expand svg {
+    transform: rotate(180deg);
+    stroke: var(--cyber-cyan);
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+}
+
+/* 展开状态下悬停效果 */
+.history-item.expanded .history-item-expand:hover svg,
+.history-list-item.expanded .history-list-item-expand:hover svg {
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+    transform: rotate(180deg) scale(1.1);
+}
+
+/* 报告内容区域 - 默认展开显示 */
+.history-item-report,
+.history-list-item-report {
+    background: rgba(5, 15, 30, 0.8);
+    border-top: 1px solid rgba(10, 132, 255, 0.15);
+    display: block;
+    max-height: 400px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* 收起状态时隐藏报告内容 */
+.history-item:not(.expanded) .history-item-report,
+.history-list-item:not(.expanded) .history-list-item-report {
+    max-height: 0;
+    opacity: 0;
+    border-top: none;
+}
+
+/* 报告头部 */
+.history-report-header,
+.history-list-item-report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: linear-gradient(90deg, rgba(10, 35, 70, 0.6), transparent);
+    border-bottom: 1px solid rgba(10, 132, 255, 0.1);
+}
+
+.history-report-title,
+.history-list-item-report-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(200, 220, 255, 0.9);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 文档图标 */
+.history-report-title svg,
+.history-list-item-report-title svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: rgba(200, 220, 255, 0.9);
+    stroke-width: 1.5;
+}
+
+/* 报告操作按钮 - 赛博朋克风格 */
+.history-report-actions,
+.history-list-item-report-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.history-report-btn,
+.history-list-item-report-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+    background: transparent;
+}
+
+/* 复制按钮 - 青色 */
+.history-report-btn[data-action="copy"],
+.history-list-item-report-btn[data-action="copy"] {
+    color: rgba(0, 255, 255, 0.9);
+    border-color: rgba(0, 255, 255, 0.4);
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.history-report-btn[data-action="copy"]:hover,
+.history-list-item-report-btn[data-action="copy"]:hover {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.7);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+}
+
+/* 导出TXT按钮 - 蓝色 */
+.history-report-btn[data-action="export-txt"],
+.history-list-item-report-btn[data-action="export-txt"] {
+    color: rgba(100, 180, 255, 0.9);
+    border-color: rgba(100, 180, 255, 0.4);
+    background: rgba(100, 180, 255, 0.1);
+}
+
+.history-report-btn[data-action="export-txt"]:hover,
+.history-list-item-report-btn[data-action="export-txt"]:hover {
+    background: rgba(100, 180, 255, 0.2);
+    border-color: rgba(100, 180, 255, 0.7);
+    box-shadow: 0 0 12px rgba(100, 180, 255, 0.4);
+}
+
+/* 导出MD按钮 - 紫色 */
+.history-report-btn[data-action="export-md"],
+.history-list-item-report-btn[data-action="export-md"] {
+    color: rgba(180, 100, 255, 0.9);
+    border-color: rgba(180, 100, 255, 0.4);
+    background: rgba(180, 100, 255, 0.1);
+}
+
+.history-report-btn[data-action="export-md"]:hover,
+.history-list-item-report-btn[data-action="export-md"]:hover {
+    background: rgba(180, 100, 255, 0.2);
+    border-color: rgba(180, 100, 255, 0.7);
+    box-shadow: 0 0 12px rgba(180, 100, 255, 0.4);
+}
+
+/* 导出Word按钮 - 橙色 */
+.history-report-btn[data-action="export-word"],
+.history-list-item-report-btn[data-action="export-word"] {
+    color: rgba(255, 160, 60, 0.9);
+    border-color: rgba(255, 160, 60, 0.4);
+    background: rgba(255, 160, 60, 0.1);
+}
+
+.history-report-btn[data-action="export-word"]:hover,
+.history-list-item-report-btn[data-action="export-word"]:hover {
+    background: rgba(255, 160, 60, 0.2);
+    border-color: rgba(255, 160, 60, 0.7);
+    box-shadow: 0 0 12px rgba(255, 160, 60, 0.4);
+}
+
+/* 导出PDF按钮 - 红色 */
+.history-report-btn[data-action="export-pdf"],
+.history-list-item-report-btn[data-action="export-pdf"] {
+    color: rgba(255, 100, 100, 0.9);
+    border-color: rgba(255, 100, 100, 0.4);
+    background: rgba(255, 100, 100, 0.1);
+}
+
+.history-report-btn[data-action="export-pdf"]:hover,
+.history-list-item-report-btn[data-action="export-pdf"]:hover {
+    background: rgba(255, 100, 100, 0.2);
+    border-color: rgba(255, 100, 100, 0.7);
+    box-shadow: 0 0 12px rgba(255, 100, 100, 0.4);
+}
+
+/* 收起按钮 - 赛博朋克风格 */
+.history-collapse-btn {
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(100, 120, 150, 0.15);
+    border: 1px solid rgba(100, 120, 150, 0.4);
+    color: rgba(180, 200, 230, 0.8);
+    margin-left: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.history-collapse-btn svg {
+    width: 14px;
+    height: 14px;
+    transition: all 0.3s ease;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.history-collapse-btn:hover {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.7);
+    color: rgba(0, 255, 255, 1);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.4),
+        inset 0 0 10px rgba(0, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.history-collapse-btn:hover svg {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.8));
+}
+
+.history-collapse-btn:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+/* 收起按钮脉冲动画 */
+.history-collapse-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: collapseBtnPulse 2s ease-out infinite;
+    pointer-events: none;
+}
+
+@keyframes collapseBtnPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.history-collapse-btn:hover::before {
+    animation: none;
+}
+
+/* 报告内容 */
+.history-report-content,
+.history-list-item-report-content {
+    padding: 16px 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(200, 220, 255, 0.85);
+    max-height: 250px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 空状态 */
+.history-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(150, 180, 220, 0.6);
+}
+
+.history-empty-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+.history-empty-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: rgba(10, 132, 255, 0.5);
+    stroke-width: 1;
+    filter: drop-shadow(0 0 10px rgba(10, 132, 255, 0.3));
+    animation: emptyIconPulse 3s ease-in-out infinite;
+}
+
+@keyframes emptyIconPulse {
+    0%, 100% {
+        stroke: rgba(10, 132, 255, 0.5);
+        filter: drop-shadow(0 0 10px rgba(10, 132, 255, 0.3));
+    }
+    50% {
+        stroke: rgba(0, 255, 255, 0.7);
+        filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+    }
+}
+
+.history-empty-text {
+    font-size: 14px;
+    color: rgba(150, 180, 220, 0.6);
+}
+
+/* 自定义滚动条 */
+.history-modal-body::-webkit-scrollbar,
+.history-report-content::-webkit-scrollbar,
+.history-list-item-report-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-modal-body::-webkit-scrollbar-track,
+.history-report-content::-webkit-scrollbar-track,
+.history-list-item-report-content::-webkit-scrollbar-track {
+    background: rgba(10, 132, 255, 0.05);
+}
+
+.history-modal-body::-webkit-scrollbar-thumb,
+.history-report-content::-webkit-scrollbar-thumb,
+.history-list-item-report-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(10, 132, 255, 0.4), rgba(0, 255, 255, 0.4));
+    border-radius: 3px;
+}
+
+/* ========================================
+   任务描述建议 - 赛博朋克风格
+   ======================================== */
+
+/* 建议框主体 */
+.suggestion-box {
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 50, 0.95) 0%, 
+        rgba(10, 20, 40, 0.98) 100%
+    );
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: -8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(0, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: suggestionBoxGlow 3s ease-in-out infinite;
+    clip-path: polygon(
+        0 0, 
+        calc(100% - 10px) 0, 
+        100% 10px, 
+        100% 100%, 
+        10px 100%, 
+        0 calc(100% - 10px)
+    );
+}
+
+/* 建议框发光动画 */
+@keyframes suggestionBoxGlow {
+    0%, 100% {
+        border-color: rgba(0, 255, 255, 0.3);
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.4),
+            0 0 30px rgba(0, 255, 255, 0.1);
+    }
+    50% {
+        border-color: rgba(255, 0, 255, 0.5);
+        box-shadow: 
+            0 4px 25px rgba(0, 0, 0, 0.4),
+            0 0 40px rgba(255, 0, 255, 0.15);
+    }
+}
+
+/* 科技感网格背景 */
+.suggestion-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(20px, 20px); }
+}
+
+/* 扫描线效果 */
+.suggestion-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.8), 
+        rgba(255, 0, 255, 0.8), 
+        transparent
+    );
+    animation: suggestionScanline 4s linear infinite;
+    filter: blur(1px);
+}
+
+@keyframes suggestionScanline {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* 建议标题 */
+.suggestion-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #00ffff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.5);
+    position: relative;
+    z-index: 1;
+}
+
+/* 标题故障艺术效果 */
+.suggestion-title::before {
+    content: '✨';
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.8));
+    animation: titleIconPulse 2s ease-in-out infinite;
+}
+
+@keyframes titleIconPulse {
+    0%, 100% { 
+        filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.8));
+        transform: scale(1);
+    }
+    50% { 
+        filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.9));
+        transform: scale(1.1);
+    }
+}
+
+/* 建议列表 */
+.suggestion-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* 建议项 */
+.suggestion-item {
+    font-size: 12px;
+    color: rgba(180, 200, 230, 0.9);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* 建议项悬停效果 */
+.suggestion-item:hover {
+    color: #00ffff;
+    background: rgba(0, 255, 255, 0.15);
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.2),
+        inset 0 0 10px rgba(0, 255, 255, 0.05);
+    transform: translateX(8px);
+}
+
+/* 建议项霓虹边框动画 */
+.suggestion-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.2), 
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.suggestion-item:hover::before {
+    left: 100%;
+}
+
+/* 建议项图标 */
+.suggestion-item::after {
+    content: '▸';
+    color: rgba(0, 255, 255, 0.6);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.suggestion-item:hover::after {
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    transform: translateX(4px);
+}
+
+/* 最后一个建议项无下边距 */
+.suggestion-item:last-child {
+    margin-bottom: 0;
+}
+
+/* 建议框滑入动画 */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suggestion-box {
+    animation: slideDown 0.3s ease, suggestionBoxGlow 3s ease-in-out infinite;
+}
+
+/* 提示信息 - 赛博朋克风格 */
+.hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    background: rgba(255, 200, 0, 0.08);
+    border: 1px solid rgba(255, 200, 0, 0.2);
+    border-radius: 6px;
+    font-size: 12px;
+    color: rgba(255, 220, 100, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+.hint::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 200, 0, 0.1), 
+        transparent
+    );
+    animation: hintShine 3s ease-in-out infinite;
+}
+
+@keyframes hintShine {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
+}
+
+.hint-icon {
+    font-size: 14px;
+    filter: drop-shadow(0 0 5px rgba(255, 200, 0, 0.6));
+    animation: hintIconPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintIconPulse {
+    0%, 100% { 
+        filter: drop-shadow(0 0 5px rgba(255, 200, 0, 0.6));
+    }
+    50% { 
+        filter: drop-shadow(0 0 10px rgba(255, 200, 0, 0.9));
+    }
+}
+
+/* ========================================
+   停止按钮 - 赛博朋克风格
+   ======================================== */
+
+/* 停止按钮主体 */
+.stop-btn {
+    width: 100%;
+    padding: 14px 24px;
+    background: linear-gradient(145deg, 
+        rgba(255, 50, 100, 0.2) 0%, 
+        rgba(255, 30, 80, 0.15) 50%,
+        rgba(255, 50, 100, 0.2) 100%
+    );
+    color: #ff3366;
+    border: 1px solid rgba(255, 51, 102, 0.6);
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 
+        0 4px 15px rgba(255, 51, 102, 0.3),
+        0 0 20px rgba(255, 51, 102, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: stopBtnPulse 2s ease-in-out infinite;
+    clip-path: polygon(
+        0 0, 
+        calc(100% - 8px) 0, 
+        100% 8px, 
+        100% 100%, 
+        8px 100%, 
+        0 calc(100% - 8px)
+    );
+}
+
+/* 按钮脉冲发光动画 */
+@keyframes stopBtnPulse {
+    0%, 100% {
+        border-color: rgba(255, 51, 102, 0.6);
+        box-shadow: 
+            0 4px 15px rgba(255, 51, 102, 0.3),
+            0 0 20px rgba(255, 51, 102, 0.2);
+    }
+    50% {
+        border-color: rgba(255, 100, 150, 0.9);
+        box-shadow: 
+            0 4px 20px rgba(255, 51, 102, 0.5),
+            0 0 30px rgba(255, 51, 102, 0.4),
+            0 0 40px rgba(255, 100, 150, 0.2);
+    }
+}
+
+/* 故障艺术效果 - 伪元素 */
+.stop-btn::before {
+    content: 'STOP';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00ffff;
+    opacity: 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    pointer-events: none;
+    animation: stopBtnGlitch 3s infinite;
+}
+
+@keyframes stopBtnGlitch {
+    0%, 90%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%);
+    }
+    92% {
+        opacity: 0.8;
+        transform: translate(calc(-50% - 2px), calc(-50% + 1px));
+    }
+    94% {
+        opacity: 0.6;
+        transform: translate(calc(-50% + 2px), calc(-50% - 1px));
+    }
+    96% {
+        opacity: 0.9;
+        transform: translate(calc(-50% - 1px), calc(-50% + 2px));
+    }
+    98% {
+        opacity: 0.4;
+        transform: translate(calc(-50% + 1px), calc(-50% - 2px));
+    }
+}
+
+/* 扫描线效果 */
+.stop-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent
+    );
+    animation: stopBtnScanline 2s linear infinite;
+}
+
+@keyframes stopBtnScanline {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* 停止图标容器 */
+.stop-btn .stop-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(255, 51, 102, 0.6));
+}
+
+/* 图标圆圈 */
+.stop-btn .stop-icon circle {
+    stroke: #ff3366;
+    stroke-width: 2;
+    fill: none;
+    transition: all 0.3s ease;
+}
+
+/* 图标X */
+.stop-btn .stop-icon path {
+    stroke: #ff3366;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    fill: none;
+    transition: all 0.3s ease;
+}
+
+/* 悬停效果 */
+.stop-btn:hover {
+    background: linear-gradient(145deg, 
+        rgba(255, 50, 100, 0.35) 0%, 
+        rgba(255, 30, 80, 0.25) 50%,
+        rgba(255, 50, 100, 0.35) 100%
+    );
+    border-color: #ff5588;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 25px rgba(255, 51, 102, 0.5),
+        0 0 40px rgba(255, 51, 102, 0.4),
+        0 0 60px rgba(255, 100, 150, 0.3),
+        inset 0 0 20px rgba(255, 51, 102, 0.2);
+}
+
+.stop-btn:hover .stop-icon {
+    transform: scale(1.2) rotate(90deg);
+    filter: drop-shadow(0 0 10px rgba(255, 51, 102, 0.9));
+}
+
+.stop-btn:hover .stop-icon circle {
+    stroke: #ff5588;
+    stroke-width: 2.5;
+}
+
+.stop-btn:hover .stop-icon path {
+    stroke: #ff5588;
+    stroke-width: 3;
+}
+
+/* 点击效果 */
+.stop-btn:active {
+    transform: scale(0.95) translateY(0);
+    box-shadow: 
+        0 2px 10px rgba(255, 51, 102, 0.3),
+        0 0 20px rgba(255, 51, 102, 0.2);
+    transition: all 0.1s ease;
+}
+
+.stop-btn:active .stop-icon {
+    transform: scale(0.9);
+}
+
+/* 按钮文字 */
+.stop-btn .btn-text {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
+}
+
+/* 科技感装饰线条 */
+.stop-btn .btn-text::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ff3366, #ff5588, #ff3366);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 51, 102, 0.8);
+}
+
+.stop-btn:hover .btn-text::after {
+    width: 100%;
+}
+
+/* ========================================
+   确认对话框 - 赛博朋克风格
+   ======================================== */
+
+/* 对话框遮罩层 */
+.confirmation-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.confirmation-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+/* 对话框内容 */
+.confirmation-modal-content {
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 50, 0.98) 0%, 
+        rgba(10, 20, 40, 0.99) 100%
+    );
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+    z-index: 1;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: confirmationModalGlow 3s ease-in-out infinite;
+    clip-path: polygon(
+        0 0, 
+        calc(100% - 15px) 0, 
+        100% 15px, 
+        100% 100%, 
+        15px 100%, 
+        0 calc(100% - 15px)
+    );
+}
+
+@keyframes confirmationModalGlow {
+    0%, 100% {
+        border-color: rgba(0, 255, 255, 0.4);
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.6),
+            0 0 40px rgba(0, 255, 255, 0.15);
+    }
+    50% {
+        border-color: rgba(255, 0, 255, 0.6);
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.6),
+            0 0 50px rgba(255, 0, 255, 0.2);
+    }
+}
+
+/* 科技感网格背景 */
+.confirmation-modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 25px 25px;
+    pointer-events: none;
+    border-radius: 12px;
+}
+
+/* 对话框头部 */
+.confirmation-modal-header {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.confirmation-modal-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #00ffff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 
+        0 0 5px rgba(0, 255, 255, 0.8),
+        0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* 对话框 body */
+.confirmation-modal-body {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.confirmation-modal-body p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(200, 220, 255, 0.9);
+    margin: 0;
+}
+
+/* 对话框底部按钮区 */
+.confirmation-modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    position: relative;
+}
+
+/* 对话框按钮 */
+.confirmation-modal-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Roboto Mono', monospace;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 次要按钮 */
+.confirmation-modal-btn.secondary {
+    background: rgba(100, 120, 150, 0.15);
+    color: rgba(180, 200, 230, 0.9);
+    border-color: rgba(100, 120, 150, 0.4);
+}
+
+.confirmation-modal-btn.secondary:hover {
+    background: rgba(100, 120, 150, 0.25);
+    border-color: rgba(100, 120, 150, 0.6);
+    box-shadow: 0 0 15px rgba(100, 120, 150, 0.3);
+    transform: translateY(-1px);
+}
+
+/* 主要按钮 */
+.confirmation-modal-btn.primary {
+    background: rgba(0, 255, 255, 0.15);
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.confirmation-modal-btn.primary:hover {
+    background: rgba(0, 255, 255, 0.25);
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.4),
+        0 0 30px rgba(0, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* 按钮扫描线效果 */
+.confirmation-modal-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.confirmation-modal-btn:hover::after {
+    left: 100%;
+}
+
+/* ========================================
+   工作流阶段 - 赛博朋克风格动态视觉效果
+   ======================================== */
+
+/* 工作流步骤容器 */
+.workflow-step {
+    position: relative;
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 50, 0.6) 0%, 
+        rgba(10, 20, 40, 0.8) 100%
+    );
+    border: 1px solid rgba(10, 132, 255, 0.2);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    padding: 20px 24px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* 科技感网格背景 */
+.workflow-step::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.workflow-step:hover::before {
+    opacity: 1;
+}
+
+/* 扫描线效果 */
+.workflow-step::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.6), 
+        rgba(255, 0, 255, 0.6),
+        transparent
+    );
+    animation: workflowScanline 3s linear infinite;
+    opacity: 0;
+}
+
+.workflow-step:hover::after {
+    opacity: 1;
+}
+
+@keyframes workflowScanline {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+/* 激活状态 - 霓虹发光 */
+.workflow-step.active {
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.2),
+        0 0 60px rgba(0, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: workflowActivePulse 2s ease-in-out infinite;
+}
+
+@keyframes workflowActivePulse {
+    0%, 100% {
+        border-color: rgba(0, 255, 255, 0.5);
+        box-shadow: 
+            0 0 30px rgba(0, 255, 255, 0.2),
+            0 0 60px rgba(0, 255, 255, 0.1);
+    }
+    50% {
+        border-color: rgba(255, 0, 255, 0.6);
+        box-shadow: 
+            0 0 40px rgba(255, 0, 255, 0.3),
+            0 0 80px rgba(255, 0, 255, 0.15);
+    }
+}
+
+/* 完成状态 */
+.workflow-step.completed {
+    border-color: rgba(0, 255, 136, 0.4);
+    background: linear-gradient(145deg, 
+        rgba(0, 50, 40, 0.4) 0%, 
+        rgba(10, 20, 40, 0.8) 100%
+    );
+}
+
+.workflow-step.completed::before {
+    background-image: 
+        linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
+}
+
+/* 错误状态 */
+.workflow-step.error {
+    border-color: rgba(255, 50, 100, 0.4);
+    background: linear-gradient(145deg, 
+        rgba(50, 10, 20, 0.4) 0%, 
+        rgba(10, 20, 40, 0.8) 100%
+    );
+    animation: workflowErrorPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes workflowErrorPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 50, 100, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 50, 100, 0.4);
+    }
+}
+
+/* 步骤序号 - 赛博朋克风格 */
+.step-number {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, 
+        rgba(10, 132, 255, 0.8) 0%, 
+        rgba(0, 80, 200, 0.9) 100%
+    );
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: 'Roboto Mono', monospace;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 0 15px rgba(10, 132, 255, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* 步骤序号内部发光 */
+.step-number::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+}
+
+/* 步骤序号故障效果 */
+.step-number::after {
+    content: attr(data-number);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 0, 255, 0.8);
+    opacity: 0;
+    animation: stepNumberGlitch 4s infinite;
+}
+
+@keyframes stepNumberGlitch {
+    0%, 90%, 100% { opacity: 0; }
+    92% { opacity: 0.8; transform: translate(calc(-50% - 2px), calc(-50% + 1px)); }
+    94% { opacity: 0.4; transform: translate(calc(-50% + 2px), calc(-50% - 1px)); }
+    96% { opacity: 0.9; transform: translate(calc(-50% - 1px), calc(-50% + 2px)); }
+    98% { opacity: 0.3; transform: translate(calc(-50% + 1px), calc(-50% - 2px)); }
+}
+
+/* 激活状态的步骤序号 */
+.workflow-step.active .step-number {
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.9) 0%, 
+        rgba(0, 150, 255, 0.95) 100%
+    );
+    border-color: rgba(0, 255, 255, 0.6);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    animation: stepNumberActivePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes stepNumberActivePulse {
+    0%, 100% { 
+        box-shadow: 
+            0 0 20px rgba(0, 255, 255, 0.6),
+            0 0 40px rgba(0, 255, 255, 0.3);
+    }
+    50% { 
+        box-shadow: 
+            0 0 30px rgba(0, 255, 255, 0.8),
+            0 0 60px rgba(0, 255, 255, 0.4);
+    }
+}
+
+/* 完成状态的步骤序号 */
+.step-number.completed {
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 136, 0.9) 0%, 
+        rgba(0, 200, 100, 0.95) 100%
+    );
+    border-color: rgba(0, 255, 136, 0.5);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 136, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+/* 错误状态的步骤序号 */
+.step-number.error {
+    background: linear-gradient(135deg, 
+        rgba(255, 50, 100, 0.9) 0%, 
+        rgba(200, 0, 50, 0.95) 100%
+    );
+    border-color: rgba(255, 50, 100, 0.5);
+    box-shadow: 
+        0 0 15px rgba(255, 50, 100, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    animation: stepNumberErrorShake 0.5s ease-in-out infinite;
+}
+
+/* ========================================
+   历史记录删除功能 - 赛博朋克风格
+   ======================================== */
+
+/* 删除按钮容器 */
+.history-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.history-item:hover .history-item-actions,
+.history-list-item:hover .history-item-actions {
+    opacity: 1;
+}
+
+/* 删除按钮 - 霓虹粉/青色 */
+.history-delete-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, 
+        rgba(255, 0, 128, 0.1) 0%, 
+        rgba(255, 0, 200, 0.05) 100%
+    );
+    border: 1px solid rgba(255, 0, 128, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-delete-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 0, 128, 0.4), 
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.history-delete-btn:hover::before {
+    left: 100%;
+}
+
+.history-delete-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: rgba(255, 100, 150, 0.8);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* 删除按钮悬停效果 - 电子脉冲 */
+.history-delete-btn:hover {
+    background: linear-gradient(145deg, 
+        rgba(255, 0, 128, 0.25) 0%, 
+        rgba(255, 0, 200, 0.15) 100%
+    );
+    border-color: rgba(255, 0, 128, 0.8);
+    box-shadow: 
+        0 0 20px rgba(255, 0, 128, 0.5),
+        0 0 40px rgba(255, 0, 128, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+    animation: deleteBtnPulse 1.5s ease-in-out infinite;
+}
+
+.history-delete-btn:hover svg {
+    stroke: #ff4080;
+    filter: drop-shadow(0 0 8px rgba(255, 64, 128, 0.8));
+}
+
+@keyframes deleteBtnPulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(255, 0, 128, 0.5),
+            0 0 40px rgba(255, 0, 128, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(255, 0, 128, 0.7),
+            0 0 60px rgba(255, 0, 128, 0.4);
+    }
+}
+
+/* 删除按钮点击效果 - 故障艺术 */
+.history-delete-btn:active {
+    transform: scale(0.95);
+    animation: deleteBtnGlitch 0.3s ease;
+}
+
+@keyframes deleteBtnGlitch {
+    0% { transform: scale(0.95) translate(0, 0); }
+    20% { transform: scale(0.95) translate(-2px, 1px); }
+    40% { transform: scale(0.95) translate(2px, -1px); }
+    60% { transform: scale(0.95) translate(-1px, 2px); }
+    80% { transform: scale(0.95) translate(1px, -2px); }
+    100% { transform: scale(0.95) translate(0, 0); }
+}
+
+/* 历史记录项删除动画 - 像素化消失 */
+.history-item.deleting,
+.history-list-item.deleting {
+    animation: pixelateDisappear 0.6s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes pixelateDisappear {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+    }
+    25% {
+        opacity: 0.8;
+        filter: blur(1px);
+        transform: scale(0.98);
+    }
+    50% {
+        opacity: 0.5;
+        filter: blur(3px);
+        transform: scale(0.95);
+    }
+    75% {
+        opacity: 0.2;
+        filter: blur(6px) brightness(1.5);
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(10px) brightness(2);
+        transform: scale(0.8);
+        height: 0;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* 删除确认对话框 - 赛博朋克风格 */
+.delete-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.delete-confirm-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.delete-confirm-modal {
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 50, 0.98) 0%, 
+        rgba(10, 20, 40, 0.99) 100%
+    );
+    border: 1px solid rgba(255, 0, 128, 0.4);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(255, 0, 128, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.delete-confirm-overlay.show .delete-confirm-modal {
+    transform: scale(1) translateY(0);
+}
+
+/* 警告图标 */
+.delete-confirm-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+.delete-confirm-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: rgba(255, 64, 128, 0.9);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 15px rgba(255, 64, 128, 0.6));
+    animation: warningIconPulse 2s ease-in-out infinite;
+}
+
+@keyframes warningIconPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 15px rgba(255, 64, 128, 0.6));
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 25px rgba(255, 64, 128, 0.9));
+        transform: scale(1.05);
+    }
+}
+
+/* 对话框标题 */
+.delete-confirm-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    text-align: center;
+    margin-bottom: 12px;
+    text-shadow: 0 0 20px rgba(255, 64, 128, 0.5);
+}
+
+/* 对话框内容 */
+.delete-confirm-text {
+    font-size: 14px;
+    color: rgba(180, 200, 230, 0.8);
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+/* 对话框按钮组 */
+.delete-confirm-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* 取消按钮 */
+.delete-confirm-cancel {
+    padding: 12px 24px;
+    background: rgba(100, 120, 150, 0.2);
+    border: 1px solid rgba(100, 120, 150, 0.4);
+    border-radius: 8px;
+    color: rgba(180, 200, 230, 0.9);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-confirm-cancel:hover {
+    background: rgba(100, 120, 150, 0.3);
+    border-color: rgba(100, 120, 150, 0.6);
+    box-shadow: 0 0 15px rgba(100, 120, 150, 0.3);
+}
+
+/* 确认删除按钮 */
+.delete-confirm-confirm {
+    padding: 12px 24px;
+    background: linear-gradient(145deg, 
+        rgba(255, 0, 128, 0.3) 0%, 
+        rgba(255, 0, 100, 0.2) 100%
+    );
+    border: 1px solid rgba(255, 0, 128, 0.5);
+    border-radius: 8px;
+    color: #ff4080;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.delete-confirm-confirm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 64, 128, 0.4), 
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.delete-confirm-confirm:hover::before {
+    left: 100%;
+}
+
+.delete-confirm-confirm:hover {
+    background: linear-gradient(145deg, 
+        rgba(255, 0, 128, 0.4) 0%, 
+        rgba(255, 0, 100, 0.3) 100%
+    );
+    border-color: rgba(255, 0, 128, 0.8);
+    box-shadow: 
+        0 0 20px rgba(255, 0, 128, 0.5),
+        0 0 40px rgba(255, 0, 128, 0.3);
+    transform: translateY(-2px);
+}
+
+/* 撤销提示 - 赛博朋克风格 */
+.delete-undo-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(145deg, 
+        rgba(15, 35, 65, 0.98) 0%, 
+        rgba(10, 25, 50, 0.99) 100%
+    );
+    border: 1px solid rgba(0, 255, 200, 0.4);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 255, 200, 0.2);
+    z-index: 10001;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.delete-undo-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.delete-undo-text {
+    font-size: 14px;
+    color: rgba(200, 220, 255, 0.9);
+}
+
+.delete-undo-btn {
+    padding: 8px 16px;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 200, 0.2) 0%, 
+        rgba(0, 200, 180, 0.15) 100%
+    );
+    border: 1px solid rgba(0, 255, 200, 0.4);
+    border-radius: 6px;
+    color: #00ffc8;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-undo-btn:hover {
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 200, 0.3) 0%, 
+        rgba(0, 200, 180, 0.25) 100%
+    );
+    border-color: rgba(0, 255, 200, 0.7);
+    box-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
+    transform: translateY(-1px);
+}
+
+/* 扫描线装饰 */
+.delete-confirm-modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 0, 128, 0.8), 
+        rgba(255, 0, 200, 0.8), 
+        transparent
+    );
+    animation: deleteModalScanline 3s linear infinite;
+}
+
+@keyframes deleteModalScanline {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* 科技感网格背景 */
+.delete-confirm-modal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(255, 0, 128, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 128, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+@keyframes stepNumberErrorShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* 步骤图标 - 赛博朋克风格 */
+.step-icon {
+    font-size: 18px;
+    filter: drop-shadow(0 0 8px rgba(10, 132, 255, 0.6));
+    transition: all 0.3s ease;
+    animation: stepIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes stepIconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.workflow-step:hover .step-icon {
+    filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8));
+    transform: scale(1.2);
+}
+
+/* 步骤标题 */
+.step-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(220, 240, 255, 0.95);
+    text-shadow: 0 0 10px rgba(10, 132, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.workflow-step.active .step-title {
+    color: #00ffff;
+    text-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.5),
+        0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* 步骤描述 */
+.step-description {
+    font-size: 13px;
+    color: rgba(180, 200, 230, 0.8);
+    margin-top: 8px;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 12px;
+}
+
+.step-description::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    background: rgba(0, 255, 255, 0.6);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+}
+
+/* 时间显示 - 赛博朋克风格 */
+.step-time {
+    font-size: 11px;
+    color: rgba(150, 180, 220, 0.7);
+    font-family: 'Roboto Mono', monospace;
+    background: rgba(10, 30, 60, 0.5);
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(10, 132, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.workflow-step:hover .step-time {
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+/* 步骤详情区域 */
+.step-details {
+    margin-top: 16px;
+    padding: 16px;
+    background: linear-gradient(145deg, 
+        rgba(10, 25, 50, 0.6) 0%, 
+        rgba(5, 15, 35, 0.8) 100%
+    );
+    border-radius: 8px;
+    border: 1px solid rgba(10, 132, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 详情区域扫描线 */
+.step-details::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 255, 0.4), 
+        transparent
+    );
+    animation: detailsScanline 2s linear infinite;
+}
+
+@keyframes detailsScanline {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* 折叠按钮 - 赛博朋克风格 */
+.step-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: rgba(10, 30, 60, 0.4);
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    border-radius: 6px;
+    font-size: 12px;
+    color: rgba(150, 180, 220, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Roboto Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.step-toggle:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.5);
+    color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.step-toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 10px;
+}
+
+.step-toggle.expanded .step-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* 计划列表 - 赛博朋克风格 */
+.plan-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plan-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(10, 132, 255, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: rgba(180, 200, 230, 0.85);
+    line-height: 1.6;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.plan-list li::before {
+    content: '>';
+    color: rgba(0, 255, 255, 0.6);
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.plan-list li:hover {
+    color: rgba(220, 240, 255, 0.95);
+    padding-left: 8px;
+}
+
+.plan-list li:hover::before {
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.plan-list li:last-child {
+    border-bottom: none;
+}
+
+/* 状态指示器 - 赛博朋克风格 */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.status-indicator.active {
+    background: #00ffff;
+    box-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff;
+    animation: statusIndicatorPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusIndicatorPulse {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 
+            0 0 10px #00ffff,
+            0 0 20px #00ffff;
+    }
+    50% { 
+        opacity: 0.6;
+        box-shadow: 
+            0 0 5px #00ffff,
+            0 0 10px #00ffff;
+    }
+}
+
+.status-indicator.completed {
+    background: #00ff88;
+    box-shadow: 0 0 10px #00ff88;
+}
+
+.status-indicator.error {
+    background: #ff3366;
+    box-shadow: 0 0 10px #ff3366;
+    animation: statusIndicatorErrorBlink 1s ease-in-out infinite;
+}
+
+@keyframes statusIndicatorErrorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* 粒子效果容器 */
+.workflow-step-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* 连接线效果 */
+.workflow-connector {
+    position: absolute;
+    left: 42px;
+    top: 60px;
+    width: 2px;
+    height: calc(100% - 40px);
+    background: linear-gradient(180deg, 
+        rgba(0, 255, 255, 0.3),
+        rgba(255, 0, 255, 0.3)
+    );
+    opacity: 0.5;
+}
+
+.workflow-connector.active {
+    background: linear-gradient(180deg, 
+        rgba(0, 255, 255, 0.6),
+        rgba(0, 255, 255, 0.2)
+    );
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+    animation: connectorFlow 2s linear infinite;
+}
+
+@keyframes connectorFlow {
+    0% { 
+        background-position: 0% 0%;
+        opacity: 0.5;
+    }
+    50% { 
+        opacity: 1;
+    }
+    100% { 
+        background-position: 0% 100%;
+        opacity: 0.5;
+    }
+}

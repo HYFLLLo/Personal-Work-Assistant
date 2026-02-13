@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your knowledge assistant - 个人工作助手</title>
+    <link rel="stylesheet" href="frontend/static/css/style-dark.css?v=1">
+</head>
+<body>
+    <!-- SVG 渐变定义 -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <!-- 图标渐变 -->
+            <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#1E90FF;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#0066cc;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="icon-gradient-hover" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00FFFF;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#1E90FF;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="success-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00d084;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00b36b;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="warning-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ffa502;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="error-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ff4757;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ff2e43;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- 顶部状态栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <div class="logo-container">
+                <!-- Logo SVG -->
+                <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                    <defs>
+                        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1E90FF"/>
+                            <stop offset="100%" style="stop-color:#00FFFF"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="url(#logo-grad)" stroke-width="2"/>
+                    <path d="M10 16 L14 20 L22 12" fill="none" stroke="url(#logo-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="16" cy="16" r="4" fill="url(#logo-grad)" opacity="0.3"/>
+                </svg>
+                <div class="logo">Your knowledge assistant</div>
+            </div>
+        </div>
+        <div class="top-bar-center">
+            <div class="status-badge" id="statusBadge">
+                <span class="status-dot idle" id="statusDot"></span>
+                <span class="status-text" id="statusText">等待任务</span>
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <button class="history-chip" id="historyBtn" aria-label="查看历史记录">
+                <!-- 历史记录图标 SVG -->
+                <svg class="history-chip-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v5h5"/>
+                    <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+                    <path d="M12 7v5l4 2"/>
+                </svg>
+                <span class="history-chip-text">历史记录</span>
+                <span class="history-chip-count" id="historyCount">0</span>
+            </button>
+            <div class="model-info">
+                <!-- AI 图标 -->
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                DeepSeek
+            </div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-container">
+        <!-- 左侧任务工作台 -->
+        <section class="left-panel" aria-label="任务输入区">
+            <div class="panel-header">
+                <h2>
+                    <!-- 目标图标 -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#icon-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                    The Work
+                </h2>
+            </div>
+            
+            <!-- 任务卡片 -->
+            <div class="task-card">
+                <div class="task-card-header">
+                    <div class="task-card-icon">
+                        <!-- 文档编辑图标 -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </div>
+                    <div class="task-card-title">创建新任务</div>
+                </div>
+                
+                <div class="task-input-section">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="queryInput" 
+                            placeholder="请输入任务描述...
+例：整理2024Q3新能源汽车政策
+要求：含补贴变化/地方政策对比"
+                            maxlength="500"
+                            aria-label="任务描述"
+                        ></textarea>
+                        <div class="char-count-wrapper">
+                            <div class="char-count-bar">
+                                <div class="char-count-fill" id="charCountBar" style="width: 0%"></div>
+                            </div>
+                            <div class="char-count-text">
+                                <span id="charCount">0</span>/500
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hint">
+                        <span class="hint-icon">
+                            <!-- 灯泡图标 -->
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E90FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                                <path d="M12 2v1"/>
+                                <path d="M12 7a5 5 0 0 1 5 5c0 2.5-2 4-3 5.5V18h-4v-1.5c-1-1.5-3-3-3-5.5a5 5 0 0 1 5-5z"/>
+                            </svg>
+                        </span>
+                        <span>提示：描述越具体，结果越精准</span>
+                    </div>
+                    <button id="submitBtn" class="submit-btn" aria-label="生成报告">
+                        <span class="btn-icon" id="submitBtnIcon">
+                            <!-- 火箭图标 -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                                <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                            </svg>
+                        </span>
+                        <span class="btn-text" id="submitBtnText">生成报告</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 预置问题快捷入口 -->
+            <div class="preset-questions">
+                <div class="preset-header">
+                    <span class="preset-icon">
+                        <!-- 闪电图标 -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E90FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </span>
+                    <span class="preset-title">快速开始</span>
+                </div>
+                <div class="preset-list" role="list">
+                    <div class="preset-item" data-query="整理一下中国近代100年的关键事件，最后生成1000字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">01</span>
+                        <span class="preset-text">中国近代史百年关键事件</span>
+                    </div>
+                    <div class="preset-item" data-query="分析一下新能源汽车行业的发展现状和趋势，生成800字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">02</span>
+                        <span class="preset-text">新能源汽车行业分析</span>
+                    </div>
+                    <div class="preset-item" data-query="介绍一下人工智能在医疗领域的应用，生成600字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">03</span>
+                        <span class="preset-text">AI医疗应用介绍</span>
+                    </div>
+                    <div class="preset-item" data-query="总结2024年全球经济发展趋势，生成1000字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">04</span>
+                        <span class="preset-text">2024全球经济趋势</span>
+                    </div>
+                    <div class="preset-item" data-query="分析一下中国数字经济发展现状，生成800字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">05</span>
+                        <span class="preset-text">中国数字经济分析</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧智能流程画布 -->
+        <section class="right-panel" aria-label="工作流展示区">
+            <div class="panel-header">
+                <h2>
+                    <!-- 循环箭头图标 -->
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#icon-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                        <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                        <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                        <path d="M16 21h5v-5"/>
+                    </svg>
+                    智能工作流（实时可视化）
+                </h2>
+            </div>
+            <div class="workflow-canvas" id="workflowCanvas">
+                <!-- 空状态 -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-illustration">
+                        <!-- 机器人图标 -->
+                        <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="url(#icon-gradient)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));">
+                            <rect x="3" y="11" width="18" height="10" rx="2"/>
+                            <circle cx="12" cy="5" r="2"/>
+                            <path d="M12 7v4"/>
+                            <line x1="8" y1="16" x2="8" y2="16"/>
+                            <line x1="16" y1="16" x2="16" y2="16"/>
+                            <path d="M9 11V7a3 3 0 0 1 6 0v4"/>
+                        </svg>
+                    </div>
+                    <h3>你好！我是你的工作助手。</h3>
+                    <p>你可以询问问题，我来帮你查找资料。</p>
+                </div>
+
+                <!-- 工作流节点容器 -->
+                <div class="workflow-nodes" id="workflowNodes" style="display: none;">
+                    <!-- 节点将通过JavaScript动态添加 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 历史记录模态框 -->
+    <div class="history-modal" id="historyModal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+        <div class="history-modal-overlay" id="historyModalOverlay"></div>
+        <div class="history-modal-content">
+            <div class="history-modal-header">
+                <h3 id="historyModalTitle">
+                    <!-- 书籍图标 -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#icon-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    历史记录
+                </h3>
+                <button class="history-modal-close" id="historyModalClose" aria-label="关闭历史记录">✕</button>
+            </div>
+            <div class="history-modal-body" id="historyModalBody">
+                <!-- 历史记录列表 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 报告详情模态框 -->
+    <div class="report-modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+        <div class="report-modal-overlay" id="reportModalOverlay"></div>
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h3 id="reportModalTitle">报告详情</h3>
+                <button class="report-modal-close" id="reportModalClose" aria-label="关闭报告">✕</button>
+            </div>
+            <div class="report-modal-body" id="reportModalBody">
+                <!-- 报告内容 -->
+            </div>
+            <div class="report-modal-footer">
+                <button class="report-modal-btn secondary" id="reportModalCopy">
+                    <!-- 复制图标 -->
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    复制
+                </button>
+                <button class="report-modal-btn" id="reportModalExport">
+                    <!-- 下载图标 -->
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    导出TXT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="frontend/static/js/app-dark.js?v=1"></script>
+</body>
+</html>

@@ -7,6 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from backend.routers.stream import router as stream_router
+from backend.routers.export import router as export_router
+from backend.routers.knowledge_base import router as kb_router
+from backend.routers.templates import router as templates_router
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -27,6 +30,9 @@ app.add_middleware(
 )
 
 app.include_router(stream_router, prefix="/api", tags=["stream"])
+app.include_router(export_router, prefix="/api", tags=["export"])
+app.include_router(kb_router, prefix="/api", tags=["knowledge-base"])
+app.include_router(templates_router, prefix="/api", tags=["templates"])
 
 
 @app.get("/api/health")

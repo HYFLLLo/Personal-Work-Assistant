@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识库管理 - 个人工作助手</title>
+    <link rel="stylesheet" href="frontend/static/css/style.css?v=12">
+    <link rel="stylesheet" href="frontend/static/css/cyberpunk.css?v=1">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* 赛博朋克风格 - 知识库页面 */
+        body {
+            background: var(--cyber-dark, #0d1117);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* 知识库页面专用样式 */
+        .kb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 20px;
+        }
+        
+        /* 返回按钮 */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--cyber-blue, #0A84FF);
+            transform: translateX(-5px);
+        }
+        
+        .kb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(10, 132, 255, 0.3);
+        }
+        
+        .kb-title {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0A84FF 0%, #00D4FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.5px;
+        }
+        
+        .kb-stats {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 12px 20px;
+            background: rgba(10, 132, 255, 0.1);
+            border: 1px solid rgba(10, 132, 255, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(10, 132, 255, 0.15);
+            border-color: rgba(10, 132, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(10, 132, 255, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0A84FF 0%, #00D4FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+            display: inline-block;
+            min-width: 50px;
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .stat-value.updated {
+            transform: scale(1.2);
+            text-shadow: 0 0 20px rgba(10, 132, 255, 0.8);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 6px;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* 上传区域 - 赛博朋克风格 */
+        .upload-section {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(10, 132, 255, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyber-blue, #0A84FF), transparent);
+        }
+        
+        .upload-area {
+            border: 2px dashed rgba(10, 132, 255, 0.4);
+            border-radius: 12px;
+            padding: 50px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(10, 132, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(10, 132, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .upload-area:hover {
+            background: rgba(10, 132, 255, 0.1);
+            border-color: var(--cyber-blue, #0A84FF);
+            box-shadow: 0 0 30px rgba(10, 132, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .upload-area:hover::before {
+            left: 100%;
+        }
+        
+        .upload-area.dragover {
+            background: rgba(10, 132, 255, 0.15);
+            border-color: var(--cyber-blue, #0A84FF);
+            box-shadow: 0 0 40px rgba(10, 132, 255, 0.4);
+        }
+        
+        .upload-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(10, 132, 255, 0.5));
+            animation: floatHover 3s ease-in-out infinite;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .upload-hint {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        /* 文件列表 - 全息卡片风格 */
+        .documents-section {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(10, 132, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .documents-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyber-blue, #0A84FF), transparent);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '📄';
+            font-size: 24px;
+        }
+        
+        /* 过滤标签 - 赛博朋克风格 */
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .filter-tab {
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .filter-tab:hover {
+            background: rgba(10, 132, 255, 0.1);
+            border-color: rgba(10, 132, 255, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .filter-tab.active {
+            background: linear-gradient(135deg, rgba(10, 132, 255, 0.2), rgba(10, 132, 255, 0.1));
+            border-color: var(--cyber-blue, #0A84FF);
+            color: var(--cyber-blue, #0A84FF);
+            box-shadow: 0 0 20px rgba(10, 132, 255, 0.3);
+        }
+        
+        /* 文档卡片 - 全息卡片风格 */
+        .document-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .document-card {
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .document-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .document-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(10, 132, 255, 0.3);
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .document-card.completed::before {
+            background: linear-gradient(180deg, #00d084, #00b368);
+            box-shadow: 0 0 10px rgba(0, 208, 132, 0.5);
+        }
+        
+        .document-card.processing::before {
+            background: linear-gradient(180deg, #ffa500, #ff8c00);
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+        
+        .document-card.failed::before {
+            background: linear-gradient(180deg, #ff4d4d, #ff3333);
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+        }
+        
+        /* 光带扫描动画 */
+        .document-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyber-blue, #0A84FF), transparent);
+            transform: translateX(-100%);
+            transition: transform 0s;
+        }
+        
+        .document-card:hover::after {
+            animation: lightScan 0.8s ease;
+        }
+        
+        .doc-icon {
+            font-size: 36px;
+            margin-right: 18px;
+            filter: drop-shadow(0 0 10px rgba(10, 132, 255, 0.3));
+        }
+        
+        .doc-info {
+            flex: 1;
+        }
+        
+        .doc-name {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        
+        .doc-meta {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .doc-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .doc-status.completed {
+            background: rgba(0, 208, 132, 0.15);
+            color: #00d084;
+            border: 1px solid rgba(0, 208, 132, 0.3);
+            box-shadow: 0 0 15px rgba(0, 208, 132, 0.2);
+        }
+        
+        .doc-status.processing {
+            background: rgba(255, 165, 0, 0.15);
+            color: #ffa500;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.2);
+        }
+        
+        .doc-status.failed {
+            background: rgba(255, 77, 77, 0.15);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.2);
+        }
+        
+        .doc-actions {
+            display: flex;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-btn.view {
+            background: rgba(10, 132, 255, 0.15);
+            color: var(--cyber-blue, #0A84FF);
+            border-color: rgba(10, 132, 255, 0.3);
+        }
+        
+        .action-btn.view:hover {
+            background: rgba(10, 132, 255, 0.25);
+            box-shadow: 0 0 15px rgba(10, 132, 255, 0.3);
+        }
+        
+        .action-btn.delete {
+            background: rgba(255, 77, 77, 0.15);
+            color: #ff4d4d;
+            border-color: rgba(255, 77, 77, 0.3);
+        }
+        
+        .action-btn.delete:hover {
+            background: rgba(255, 77, 77, 0.25);
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+        }
+        
+        /* 进度条 - 赛博朋克风格 */
+        .upload-progress {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .upload-progress.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0A84FF, #00D4FF);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(10, 132, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        /* 空状态 - 赛博朋克风格 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(10, 132, 255, 0.3));
+            opacity: 0.6;
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Toast 提示 - 赛博朋克风格 */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 28px;
+            background: rgba(10, 10, 10, 0.95);
+            color: white;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background: rgba(0, 208, 132, 0.15);
+            border-color: rgba(0, 208, 132, 0.4);
+            color: #00d084;
+            box-shadow: 0 0 30px rgba(0, 208, 132, 0.2);
+        }
+        
+        .toast.error {
+            background: rgba(255, 77, 77, 0.15);
+            border-color: rgba(255, 77, 77, 0.4);
+            color: #ff4d4d;
+            box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);
+        }
+        
+        /* 模态框 - 赛博朋克风格 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: rgba(13, 17, 23, 0.95);
+            border: 1px solid rgba(10, 132, 255, 0.3);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(10, 132, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .modal-close {
+            font-size: 28px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        
+        .modal-close:hover {
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.1);
+        }
+        
+        .modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(10, 132, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(10, 132, 255, 0.2);
+            text-align: right;
+        }
+        
+        .btn-primary {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #0A84FF, #00D4FF);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(10, 132, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(10, 132, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="kb-container">
+        <a href="index.html" class="back-link">
+            <span>←</span>
+            <span>返回工作台</span>
+        </a>
+        
+        <div class="kb-header">
+            <h1 class="kb-title">📚 知识库管理</h1>
+            <div class="kb-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalDocs">0</div>
+                    <div class="stat-label">文档总数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="completedDocs">0</div>
+                    <div class="stat-label">已完成</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalChunks">0</div>
+                    <div class="stat-label">文本片段</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 上传区域 -->
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">拖拽文件到此处上传，或点击选择文件</div>
+                <div class="upload-hint">支持格式：TXT, MD, DOC, DOCX, XLS, XLSX, PPT, PPTX, PDF（最大50MB）</div>
+            </div>
+            <input type="file" id="fileInput" multiple accept=".txt,.md,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" hidden>
+            
+            <div class="upload-progress" id="uploadProgress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">正在上传...</div>
+            </div>
+        </div>
+        
+        <!-- 文档列表 -->
+        <div class="documents-section">
+            <div class="section-header">
+                <h2 class="section-title">📄 文档列表</h2>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">全部</button>
+                    <button class="filter-tab" data-filter="completed">已完成</button>
+                    <button class="filter-tab" data-filter="processing">处理中</button>
+                    <button class="filter-tab" data-filter="failed">失败</button>
+                </div>
+            </div>
+            
+            <div class="document-list" id="documentList">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <div class="empty-text">暂无文档，请上传文件</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 文档详情模态框 -->
+    <div class="modal" id="docModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">文档详情</h3>
+                <span class="modal-close" id="modalClose">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="modalConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        // API 基础URL
+        const API_BASE = 'http://localhost:8000/api';
+        
+        // 文件类型图标映射
+        const fileIcons = {
+            'txt': '📄',
+            'md': '📝',
+            'doc': '📘',
+            'docx': '📘',
+            'xls': '📊',
+            'xlsx': '📊',
+            'ppt': '📽️',
+            'pptx': '📽️',
+            'pdf': '📕'
+        };
+        
+        // 状态文本映射
+        const statusText = {
+            'pending': '待处理',
+            'processing': '处理中',
+            'completed': '已完成',
+            'failed': '失败'
+        };
+        
+        // 当前过滤状态
+        let currentFilter = 'all';
+        let documents = [];
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initUpload();
+            initFilterTabs();
+            loadDocuments();
+            loadStats();
+        });
+        
+        // 初始化上传功能
+        function initUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        }
+        
+        // 处理文件上传
+        async function handleFiles(files) {
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            uploadProgress.classList.add('active');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const progress = ((i + 1) / files.length) * 100;
+                
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `正在上传 ${file.name} (${i + 1}/${files.length})`;
+                
+                try {
+                    await uploadFile(file);
+                } catch (error) {
+                    showToast(`上传失败: ${file.name}`, 'error');
+                }
+            }
+            
+            setTimeout(() => {
+                uploadProgress.classList.remove('active');
+                progressFill.style.width = '0%';
+                loadDocuments();
+                loadStats();
+            }, 1000);
+        }
+        
+        // 上传单个文件
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const response = await fetch(`${API_BASE}/knowledge-base/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || '上传失败');
+            }
+            
+            const result = await response.json();
+            showToast(`上传成功: ${file.name}`, 'success');
+            return result;
+        }
+        
+        // 加载文档列表
+        async function loadDocuments() {
+            try {
+                const response = await fetch(`${API_BASE}/knowledge-base/documents`);
+                const data = await response.json();
+                
+                documents = data.documents || [];
+                renderDocuments();
+                updateStatsFromDocuments(); // 从文档数据更新统计
+            } catch (error) {
+                console.error('加载文档失败:', error);
+                showToast('加载文档列表失败', 'error');
+            }
+        }
+        
+        // 从文档数据计算并更新统计信息
+        function updateStatsFromDocuments() {
+            const totalDocs = documents.length;
+            const completedDocs = documents.filter(doc => doc.status === 'completed').length;
+            const totalChunks = documents.reduce((sum, doc) => sum + (doc.chunk_count || 0), 0);
+            
+            animateStatValue('totalDocs', totalDocs);
+            animateStatValue('completedDocs', completedDocs);
+            animateStatValue('totalChunks', totalChunks);
+        }
+        
+        // 统计数字动画更新
+        function animateStatValue(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            const oldValue = parseInt(element.textContent) || 0;
+            
+            if (oldValue === newValue) return;
+            
+            // 添加更新动画类
+            element.classList.add('updated');
+            
+            // 数字滚动动画
+            const duration = 500;
+            const startTime = performance.now();
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // 使用缓动函数
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.round(oldValue + (newValue - oldValue) * easeOutQuart);
+                
+                element.textContent = currentValue;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    element.textContent = newValue;
+                    // 移除动画类
+                    setTimeout(() => {
+                        element.classList.remove('updated');
+                    }, 300);
+                }
+            }
+            
+            requestAnimationFrame(updateNumber);
+        }
+        
+        // 加载统计信息（备用，如果后端提供stats接口）
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/knowledge-base/stats`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('totalDocs').textContent = data.total_documents || 0;
+                    document.getElementById('completedDocs').textContent = data.completed_documents || 0;
+                    document.getElementById('totalChunks').textContent = data.vector_store?.total_chunks || 0;
+                }
+            } catch (error) {
+                console.log('后端stats接口不可用，使用文档数据计算统计');
+                // 如果后端接口不可用，依赖 updateStatsFromDocuments
+            }
+        }
+        
+        // 渲染文档列表
+        function renderDocuments() {
+            const listContainer = document.getElementById('documentList');
+            
+            // 过滤文档
+            let filteredDocs = documents;
+            if (currentFilter !== 'all') {
+                filteredDocs = documents.filter(doc => doc.status === currentFilter);
+            }
+            
+            if (filteredDocs.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <div class="empty-text">${currentFilter === 'all' ? '暂无文档，请上传文件' : '该状态下暂无文档'}</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = filteredDocs.map(doc => `
+                <div class="document-card ${doc.status}">
+                    <div class="doc-icon">${fileIcons[doc.file_type] || '📄'}</div>
+                    <div class="doc-info">
+                        <div class="doc-name">${doc.filename}</div>
+                        <div class="doc-meta">
+                            ${formatFileSize(doc.file_size)} · 
+                            ${doc.word_count || 0} 字 · 
+                            ${new Date(doc.created_at).toLocaleDateString()}
+                            ${doc.chunk_count ? `· ${doc.chunk_count} 个片段` : ''}
+                        </div>
+                    </div>
+                    <div class="doc-status ${doc.status}">${statusText[doc.status]}</div>
+                    <div class="doc-actions">
+                        <button class="action-btn view" onclick="viewDocument('${doc.document_id}')">查看</button>
+                        <button class="action-btn delete" onclick="deleteDocument('${doc.document_id}')">删除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 初始化过滤标签
+        function initFilterTabs() {
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.filter;
+                    renderDocuments();
+                });
+            });
+        }
+        
+        // 查看文档详情
+        async function viewDocument(docId) {
+            try {
+                const response = await fetch(`${API_BASE}/knowledge-base/documents/${docId}`);
+                const doc = await response.json();
+                
+                const modal = document.getElementById('docModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalBody = document.getElementById('modalBody');
+                
+                modalTitle.textContent = doc.filename;
+                modalBody.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <strong>文件类型:</strong> ${doc.file_type}<br>
+                        <strong>文件大小:</strong> ${formatFileSize(doc.file_size)}<br>
+                        <strong>状态:</strong> <span class="doc-status ${doc.status}">${statusText[doc.status]}</span><br>
+                        <strong>字数:</strong> ${doc.word_count || 0}<br>
+                        <strong>片段数:</strong> ${doc.chunk_count || 0}<br>
+                        <strong>上传时间:</strong> ${new Date(doc.created_at).toLocaleString()}
+                    </div>
+                    ${doc.content_preview ? `
+                        <div style="margin-top: 20px;">
+                            <strong>内容预览:</strong>
+                            <pre style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 10px; max-height: 300px; overflow-y: auto; white-space: pre-wrap;">${doc.content_preview}</pre>
+                        </div>
+                    ` : ''}
+                    ${doc.error_message ? `
+                        <div style="margin-top: 20px; color: #dc3545;">
+                            <strong>错误信息:</strong> ${doc.error_message}
+                        </div>
+                    ` : ''}
+                `;
+                
+                modal.classList.add('active');
+            } catch (error) {
+                showToast('加载文档详情失败', 'error');
+            }
+        }
+        
+        // 删除文档
+        async function deleteDocument(docId) {
+            if (!confirm('确定要删除这个文档吗？')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/knowledge-base/documents/${docId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showToast('文档已删除', 'success');
+                    // 从本地数组中移除文档，然后更新UI和统计
+                    documents = documents.filter(doc => doc.document_id !== docId);
+                    renderDocuments();
+                    updateStatsFromDocuments();
+                } else {
+                    throw new Error('删除失败');
+                }
+            } catch (error) {
+                showToast('删除文档失败', 'error');
+            }
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // 显示 Toast 提示
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 模态框关闭事件
+        document.getElementById('modalClose').addEventListener('click', () => {
+            document.getElementById('docModal').classList.remove('active');
+        });
+        
+        document.getElementById('modalConfirm').addEventListener('click', () => {
+            document.getElementById('docModal').classList.remove('active');
+        });
+        
+        // 点击模态框外部关闭
+        document.getElementById('docModal').addEventListener('click', (e) => {
+            if (e.target.id === 'docModal') {
+                document.getElementById('docModal').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

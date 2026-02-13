@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史记录 - Your knowledge assistant</title>
+    <link rel="stylesheet" href="frontend/static/css/style.css?v=999">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <style>
+        /* 历史记录页面专用样式 */
+        .history-page {
+            padding: 80px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .history-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .history-page-title .icon {
+            font-size: 32px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+        }
+
+        .history-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .history-item {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .history-item-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .history-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            flex: 1;
+            margin-right: 16px;
+        }
+
+        .history-item-time {
+            font-size: 13px;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .history-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .history-item-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .history-item-status.completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .history-item-status.failed {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+        }
+
+        .history-item-preview {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--bg-secondary);
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-history-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-history-text {
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .start-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .start-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* 报告详情弹窗 */
+        .report-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 40px;
+        }
+
+        .report-modal-overlay.show {
+            display: flex;
+        }
+
+        .report-modal {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .report-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .report-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .report-modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .report-modal-close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .report-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .report-content {
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .report-content h1 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+        }
+
+        .report-content h2 {
+            font-size: 20px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .report-content h3 {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .report-content p {
+            margin-bottom: 12px;
+        }
+
+        .report-content ul, .report-content ol {
+            margin-bottom: 12px;
+            padding-left: 24px;
+        }
+
+        .report-content li {
+            margin-bottom: 6px;
+        }
+
+        .report-modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn-secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .modal-btn-primary {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .modal-btn-export {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(184, 41, 221, 0.1) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        .modal-btn-export:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(184, 41, 221, 0.2) 100%);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .report-modal-footer .modal-btn-primary {
+            margin-left: auto;
+        }
+
+        .export-buttons-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: rgba(0, 212, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .export-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: 4px;
+        }
+
+        /* 删除按钮样式 */
+        .history-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover .history-item-actions {
+            opacity: 1;
+        }
+
+        .history-delete-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, rgba(255, 0, 128, 0.1) 0%, rgba(255, 0, 200, 0.05) 100%);
+            border: 1px solid rgba(255, 0, 128, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .history-delete-btn:hover {
+            background: linear-gradient(145deg, rgba(255, 0, 128, 0.25) 0%, rgba(255, 0, 200, 0.15) 100%);
+            border-color: rgba(255, 0, 128, 0.8);
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+            transform: scale(1.1);
+        }
+
+        .history-delete-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: rgba(255, 100, 150, 0.8);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .history-delete-btn:hover svg {
+            stroke: #ff4080;
+            filter: drop-shadow(0 0 8px rgba(255, 64, 128, 0.8));
+        }
+
+        /* 删除动画 */
+        .history-item.deleting {
+            animation: pixelateDisappear 0.6s ease forwards;
+            pointer-events: none;
+        }
+
+        @keyframes pixelateDisappear {
+            0% { opacity: 1; filter: blur(0); transform: scale(1); }
+            25% { opacity: 0.8; filter: blur(1px); transform: scale(0.98); }
+            50% { opacity: 0.5; filter: blur(3px); transform: scale(0.95); }
+            75% { opacity: 0.2; filter: blur(6px) brightness(1.5); transform: scale(0.9); }
+            100% { opacity: 0; filter: blur(10px) brightness(2); transform: scale(0.8); height: 0; margin: 0; padding: 0; }
+        }
+
+        /* 删除确认对话框 */
+        .delete-confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .delete-confirm-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .delete-confirm-modal {
+            background: linear-gradient(145deg, rgba(15, 25, 50, 0.98) 0%, rgba(10, 20, 40, 0.99) 100%);
+            border: 1px solid rgba(255, 0, 128, 0.4);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 0, 128, 0.2);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .delete-confirm-overlay.show .delete-confirm-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .delete-confirm-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+        }
+
+        .delete-confirm-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: rgba(255, 64, 128, 0.9);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 15px rgba(255, 64, 128, 0.6));
+        }
+
+        .delete-confirm-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .delete-confirm-text {
+            font-size: 14px;
+            color: rgba(180, 200, 230, 0.8);
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .delete-confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .delete-confirm-cancel {
+            padding: 12px 24px;
+            background: rgba(100, 120, 150, 0.2);
+            border: 1px solid rgba(100, 120, 150, 0.4);
+            border-radius: 8px;
+            color: rgba(180, 200, 230, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-confirm-cancel:hover {
+            background: rgba(100, 120, 150, 0.3);
+            border-color: rgba(100, 120, 150, 0.6);
+        }
+
+        .delete-confirm-confirm {
+            padding: 12px 24px;
+            background: linear-gradient(145deg, rgba(255, 0, 128, 0.3) 0%, rgba(255, 0, 100, 0.2) 100%);
+            border: 1px solid rgba(255, 0, 128, 0.5);
+            border-radius: 8px;
+            color: #ff4080;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-confirm-confirm:hover {
+            background: linear-gradient(145deg, rgba(255, 0, 128, 0.4) 0%, rgba(255, 0, 100, 0.3) 100%);
+            border-color: rgba(255, 0, 128, 0.8);
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 撤销提示 */
+        .delete-undo-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(145deg, rgba(15, 35, 65, 0.98) 0%, rgba(10, 25, 50, 0.99) 100%);
+            border: 1px solid rgba(0, 255, 200, 0.4);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 200, 0.2);
+            z-index: 10001;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .delete-undo-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .delete-undo-text {
+            font-size: 14px;
+            color: rgba(200, 220, 255, 0.9);
+        }
+
+        .delete-undo-btn {
+            padding: 8px 16px;
+            background: linear-gradient(145deg, rgba(0, 255, 200, 0.2) 0%, rgba(0, 200, 180, 0.15) 100%);
+            border: 1px solid rgba(0, 255, 200, 0.4);
+            border-radius: 6px;
+            color: #00ffc8;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-undo-btn:hover {
+            background: linear-gradient(145deg, rgba(0, 255, 200, 0.3) 0%, rgba(0, 200, 180, 0.25) 100%);
+            border-color: rgba(0, 255, 200, 0.7);
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部状态栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <div class="logo-container">
+                <a href="index.html" class="logo">Your knowledge assistant</a>
+                <div class="particle-flow"></div>
+            </div>
+        </div>
+        <div class="top-bar-center">
+            <div class="status-badge">
+                <span class="status-dot idle"></span>
+                <span class="status-text">历史记录</span>
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <div class="model-info">DeepSeek</div>
+        </div>
+    </header>
+
+    <!-- 历史记录页面内容 -->
+    <div class="history-page">
+        <div class="history-page-header">
+            <h1 class="history-page-title">
+                <span class="icon">📚</span>
+                历史记录
+            </h1>
+            <a href="index.html" class="back-btn">
+                <span>←</span>
+                <span>返回首页</span>
+            </a>
+        </div>
+
+        <div class="history-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">总记录数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completedCount">0</div>
+                <div class="stat-label">已完成</div>
+            </div>
+        </div>
+
+        <div class="history-list" id="historyList">
+            <!-- 历史记录列表将在这里动态生成 -->
+        </div>
+    </div>
+
+    <!-- 报告详情弹窗 -->
+    <div class="report-modal-overlay" id="reportModal">
+        <div class="report-modal">
+            <div class="report-modal-header">
+                <h3 class="report-modal-title" id="modalTitle">报告详情</h3>
+                <button class="report-modal-close" id="modalClose">×</button>
+            </div>
+            <div class="report-modal-body">
+                <div class="report-content" id="modalContent">
+                    <!-- 报告内容 -->
+                </div>
+            </div>
+            <div class="report-modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="modalCopy">📋 复制内容</button>
+                <div class="export-buttons-group">
+                    <span class="export-label">导出为：</span>
+                    <button class="modal-btn modal-btn-export" onclick="historyPage.exportReport('txt')">📝 TXT</button>
+                    <button class="modal-btn modal-btn-export" onclick="historyPage.exportReport('markdown')">📝 Markdown</button>
+                    <button class="modal-btn modal-btn-export" onclick="historyPage.exportReport('word')">📄 Word</button>
+                    <button class="modal-btn modal-btn-export" onclick="historyPage.exportReport('pdf')">📕 PDF</button>
+                </div>
+                <button class="modal-btn modal-btn-primary" id="modalCloseBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认对话框 -->
+    <div class="delete-confirm-overlay" id="deleteConfirmModal">
+        <div class="delete-confirm-modal">
+            <div class="delete-confirm-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 class="delete-confirm-title">确认删除</h3>
+            <p class="delete-confirm-text">您确定要删除这条历史记录吗？此操作不可恢复。</p>
+            <div class="delete-confirm-actions">
+                <button class="delete-confirm-cancel" id="deleteCancelBtn">取消</button>
+                <button class="delete-confirm-confirm" id="deleteConfirmBtn">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 撤销提示 -->
+    <div class="delete-undo-toast" id="undoToast">
+        <span class="delete-undo-text">记录已删除</span>
+        <button class="delete-undo-btn" id="undoBtn">撤销</button>
+    </div>
+
+    <script>
+        // 历史记录页面逻辑
+        class HistoryPage {
+            constructor() {
+                this.historyList = document.getElementById('historyList');
+                this.totalCount = document.getElementById('totalCount');
+                this.completedCount = document.getElementById('completedCount');
+                this.reportModal = document.getElementById('reportModal');
+                this.modalTitle = document.getElementById('modalTitle');
+                this.modalContent = document.getElementById('modalContent');
+                this.modalClose = document.getElementById('modalClose');
+                this.modalCloseBtn = document.getElementById('modalCloseBtn');
+                this.modalCopy = document.getElementById('modalCopy');
+                
+                // 删除相关元素
+                this.deleteConfirmModal = document.getElementById('deleteConfirmModal');
+                this.deleteCancelBtn = document.getElementById('deleteCancelBtn');
+                this.deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+                this.undoToast = document.getElementById('undoToast');
+                this.undoBtn = document.getElementById('undoBtn');
+                
+                // 当前查看的报告内容
+                this.currentReportContent = '';
+                this.currentReportTitle = '';
+                
+                // 删除相关状态
+                this.pendingDeleteIndex = null;
+                this.pendingDeleteElement = null;
+                this.deletedItem = null;
+                this.deletedItemIndex = null;
+                this.undoTimeout = null;
+
+                this.init();
+            }
+
+            init() {
+                this.loadHistory();
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.modalClose.addEventListener('click', () => this.closeModal());
+                this.modalCloseBtn.addEventListener('click', () => this.closeModal());
+                this.modalCopy.addEventListener('click', () => this.copyContent());
+                this.reportModal.addEventListener('click', (e) => {
+                    if (e.target === this.reportModal) {
+                        this.closeModal();
+                    }
+                });
+                
+                // 删除相关事件
+                this.deleteCancelBtn.addEventListener('click', () => this.closeDeleteModal());
+                this.deleteConfirmBtn.addEventListener('click', () => this.confirmDelete());
+                this.deleteConfirmModal.addEventListener('click', (e) => {
+                    if (e.target === this.deleteConfirmModal) {
+                        this.closeDeleteModal();
+                    }
+                });
+                this.undoBtn.addEventListener('click', () => this.undoDelete());
+            }
+
+            loadHistory() {
+                const history = JSON.parse(localStorage.getItem('flowagent_history') || '[]');
+                this.renderHistory(history);
+                this.updateStats(history);
+            }
+
+            renderHistory(history) {
+                if (history.length === 0) {
+                    this.historyList.innerHTML = `
+                        <div class="empty-history">
+                            <div class="empty-history-icon">📭</div>
+                            <div class="empty-history-text">暂无历史记录</div>
+                            <a href="index.html" class="start-btn">
+                                <span>🚀</span>
+                                <span>开始第一个任务</span>
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 按时间倒序排列
+                const sortedHistory = [...history].reverse();
+
+                this.historyList.innerHTML = sortedHistory.map((item, index) => {
+                    const date = new Date(item.timestamp);
+                    const timeStr = this.formatDate(date);
+                    const statusClass = item.status === 'completed' ? 'completed' : 'failed';
+                    const statusText = item.status === 'completed' ? '✓ 已完成' : '✗ 失败';
+                    const preview = item.report ? this.extractPreview(item.report) : '无报告内容';
+                    const originalIndex = history.length - 1 - index;
+
+                    return `
+                        <div class="history-item" data-index="${originalIndex}">
+                            <div class="history-item-header">
+                                <div class="history-item-title">${this.escapeHtml(item.query)}</div>
+                                <div class="history-item-actions">
+                                    <button class="history-delete-btn" data-index="${originalIndex}" title="删除记录">
+                                        <svg viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="history-item-time">${timeStr}</div>
+                            </div>
+                            <div class="history-item-meta">
+                                <span class="history-item-status ${statusClass}">${statusText}</span>
+                                <span>⏱️ ${item.duration || '--:--'}</span>
+                            </div>
+                            ${preview ? `<div class="history-item-preview">${this.escapeHtml(preview)}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                // 绑定点击事件
+                this.historyList.querySelectorAll('.history-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        // 如果点击的是删除按钮，不触发详情展示
+                        if (e.target.closest('.history-delete-btn')) {
+                            return;
+                        }
+                        const index = parseInt(item.dataset.index);
+                        this.showReportDetail(history[index]);
+                    });
+                });
+
+                // 绑定删除按钮事件
+                this.historyList.querySelectorAll('.history-delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = parseInt(btn.dataset.index);
+                        this.showDeleteConfirm(index, btn.closest('.history-item'));
+                    });
+                });
+            }
+
+            // 显示删除确认对话框
+            showDeleteConfirm(index, element) {
+                this.pendingDeleteIndex = index;
+                this.pendingDeleteElement = element;
+                this.deleteConfirmModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // 关闭删除确认对话框
+            closeDeleteModal() {
+                this.deleteConfirmModal.classList.remove('show');
+                document.body.style.overflow = '';
+                this.pendingDeleteIndex = null;
+                this.pendingDeleteElement = null;
+            }
+
+            // 确认删除
+            async confirmDelete() {
+                if (this.pendingDeleteIndex === null || !this.pendingDeleteElement) {
+                    this.closeDeleteModal();
+                    return;
+                }
+
+                const index = this.pendingDeleteIndex;
+                const element = this.pendingDeleteElement;
+
+                // 获取当前历史记录
+                const history = JSON.parse(localStorage.getItem('flowagent_history') || '[]');
+                
+                // 保存被删除的项目用于撤销
+                this.deletedItem = history[index];
+                this.deletedItemIndex = index;
+
+                // 添加删除动画
+                element.classList.add('deleting');
+
+                // 等待动画完成
+                await new Promise(resolve => setTimeout(resolve, 600));
+
+                // 从数组中删除
+                history.splice(index, 1);
+
+                // 保存到本地存储
+                localStorage.setItem('flowagent_history', JSON.stringify(history));
+
+                // 同步删除到后端
+                try {
+                    await this.syncDeleteToBackend(this.deletedItem);
+                } catch (error) {
+                    console.error('同步删除到后端失败:', error);
+                }
+
+                // 重新渲染
+                this.renderHistory(history);
+                this.updateStats(history);
+
+                // 关闭确认对话框
+                this.closeDeleteModal();
+
+                // 显示撤销提示
+                this.showUndoToast();
+            }
+
+            // 同步删除到后端
+            async syncDeleteToBackend(item) {
+                // 如果项目有 conversation_id，调用后端 API 删除
+                if (item.conversation_id) {
+                    const response = await fetch(`http://localhost:8000/api/conversations/${item.conversation_id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('后端删除失败');
+                    }
+                }
+            }
+
+            // 显示撤销提示
+            showUndoToast() {
+                this.undoToast.classList.add('show');
+
+                // 清除之前的定时器
+                if (this.undoTimeout) {
+                    clearTimeout(this.undoTimeout);
+                }
+
+                // 5秒后自动隐藏
+                this.undoTimeout = setTimeout(() => {
+                    this.hideUndoToast();
+                    // 清空已删除项目
+                    this.deletedItem = null;
+                    this.deletedItemIndex = null;
+                }, 5000);
+            }
+
+            // 隐藏撤销提示
+            hideUndoToast() {
+                this.undoToast.classList.remove('show');
+            }
+
+            // 撤销删除
+            async undoDelete() {
+                if (!this.deletedItem || this.deletedItemIndex === null) {
+                    this.hideUndoToast();
+                    return;
+                }
+
+                // 获取当前历史记录
+                const history = JSON.parse(localStorage.getItem('flowagent_history') || '[]');
+
+                // 恢复被删除的项目
+                history.splice(this.deletedItemIndex, 0, this.deletedItem);
+
+                // 保存到本地存储
+                localStorage.setItem('flowagent_history', JSON.stringify(history));
+
+                // 同步恢复到后端
+                try {
+                    await this.syncUndoToBackend(this.deletedItem);
+                } catch (error) {
+                    console.error('同步恢复到后端失败:', error);
+                }
+
+                // 重新渲染
+                this.renderHistory(history);
+                this.updateStats(history);
+
+                // 隐藏撤销提示
+                this.hideUndoToast();
+
+                // 清空已删除项目
+                this.deletedItem = null;
+                this.deletedItemIndex = null;
+            }
+
+            // 同步恢复到后端
+            async syncUndoToBackend(item) {
+                // 如果项目有 conversation_id，重新创建会话
+                if (item.conversation_id) {
+                    const response = await fetch('http://localhost:8000/api/conversations/restore', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(item)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('后端恢复失败');
+                    }
+                }
+            }
+
+            updateStats(history) {
+                this.totalCount.textContent = history.length;
+                const completed = history.filter(item => item.status === 'completed').length;
+                this.completedCount.textContent = completed;
+            }
+
+            showReportDetail(item) {
+                this.modalTitle.textContent = item.query;
+                this.currentReportTitle = item.query;
+                if (item.report) {
+                    this.modalContent.innerHTML = this.formatReportContent(item.report);
+                    this.currentReportContent = item.report;
+                } else {
+                    this.modalContent.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px;">暂无报告内容</p>';
+                    this.currentReportContent = '';
+                }
+                this.reportModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // 导出报告方法
+            async exportReport(format) {
+                if (!this.currentReportContent) {
+                    alert('没有可导出的报告内容');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('http://localhost:8000/api/export', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            content: this.currentReportContent,
+                            format: format,
+                            title: this.currentReportTitle
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.detail || '导出失败');
+                    }
+                    
+                    // 获取文件名
+                    const contentDisposition = response.headers.get('Content-Disposition');
+                    let filename = `report.${format === 'word' ? 'docx' : format === 'markdown' ? 'md' : format}`;
+                    if (contentDisposition) {
+                        const match = contentDisposition.match(/filename=(.+)/);
+                        if (match) {
+                            filename = match[1];
+                        }
+                    }
+                    
+                    // 下载文件
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                } catch (error) {
+                    console.error('导出失败:', error);
+                    alert('导出失败: ' + error.message);
+                }
+            }
+
+            closeModal() {
+                this.reportModal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            copyContent() {
+                const content = this.modalContent.innerText;
+                navigator.clipboard.writeText(content).then(() => {
+                    this.modalCopy.textContent = '已复制!';
+                    setTimeout(() => {
+                        this.modalCopy.textContent = '复制内容';
+                    }, 2000);
+                });
+            }
+
+            formatReportContent(report) {
+                // 将Markdown转换为HTML
+                let html = report
+                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                    .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                    .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+                // 将连续的li包装成ul
+                html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+                // 将换行转换为段落
+                const paragraphs = html.split('\n\n');
+                html = paragraphs.map(p => {
+                    if (p.trim() && !p.match(/^<[hlu]/)) {
+                        return `<p>${p}</p>`;
+                    }
+                    return p;
+                }).join('');
+
+                return html;
+            }
+
+            extractPreview(report) {
+                // 提取报告的前100个字符作为预览
+                const text = report.replace(/[#*\-\[\]()]/g, '').trim();
+                return text.substring(0, 150) + (text.length > 150 ? '...' : '');
+            }
+
+            formatDate(date) {
+                const now = new Date();
+                const diff = now - date;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+                if (days === 0) {
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    if (hours === 0) {
+                        const minutes = Math.floor(diff / (1000 * 60));
+                        if (minutes === 0) {
+                            return '刚刚';
+                        }
+                        return `${minutes}分钟前`;
+                    }
+                    return `${hours}小时前`;
+                } else if (days === 1) {
+                    return '昨天';
+                } else if (days < 7) {
+                    return `${days}天前`;
+                } else {
+                    return date.toLocaleDateString('zh-CN', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            new HistoryPage();
+        });
+    </script>
+</body>
+</html>

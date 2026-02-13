@@ -728,3 +728,187 @@ textarea:focus {
     outline: 2px solid var(--primary-light);
     outline-offset: 2px;
 }
+
+/* ========================================
+   工作流步骤样式
+   ======================================== */
+
+.workflow-step {
+    position: relative;
+    background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.workflow-step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary-color);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.workflow-step:hover {
+    border-color: rgba(10, 132, 255, 0.4);
+    box-shadow: 0 4px 16px rgba(10, 132, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.workflow-step:hover::before {
+    opacity: 0.5;
+}
+
+.workflow-step.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px rgba(10, 132, 255, 0.2);
+}
+
+.workflow-step.active::before {
+    opacity: 1;
+    animation: pulseLeftBorder 2s infinite;
+}
+
+.workflow-step.completed {
+    border-color: var(--success-color);
+}
+
+.workflow-step.completed::before {
+    opacity: 1;
+    background: var(--success-color);
+}
+
+.workflow-step.error {
+    border-color: var(--error-color);
+}
+
+.workflow-step.error::before {
+    opacity: 1;
+    background: var(--error-color);
+}
+
+/* 步骤头部 */
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 步骤编号 */
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.workflow-step.active .step-number {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(10, 132, 255, 0.5);
+}
+
+.workflow-step.completed .step-number {
+    border-color: var(--success-color);
+    color: var(--success-color);
+    background: rgba(48, 209, 88, 0.1);
+}
+
+.workflow-step.error .step-number {
+    border-color: var(--error-color);
+    color: var(--error-color);
+    background: rgba(255, 69, 58, 0.1);
+}
+
+/* 步骤图标 */
+.step-icon {
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+/* 步骤信息 */
+.step-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.step-content {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+/* 步骤状态 */
+.step-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.status-icon {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.workflow-step.completed .status-icon {
+    background: rgba(48, 209, 88, 0.15);
+    border-color: var(--success-color);
+}
+
+.workflow-step.error .status-icon {
+    background: rgba(255, 69, 58, 0.15);
+    border-color: var(--error-color);
+}
+
+@keyframes pulseLeftBorder {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your knowledge assistant - 个人工作助手</title>
+    <link rel="stylesheet" href="frontend/static/css/style.css?v=7">
+    <link rel="stylesheet" href="frontend/static/css/chat-styles.css?v=1">
+</head>
+<body>
+    <!-- SVG 渐变定义 -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="spinnerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+                <stop offset="50%" style="stop-color:#00d4ff;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#40e0ff;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+    
+    <!-- 顶部状态栏 -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <div class="logo-container">
+                <div class="logo">Your knowledge assistant</div>
+            </div>
+        </div>
+        <div class="top-bar-center">
+            <div class="status-badge" id="statusBadge">
+                <div class="status-icon-wrapper idle" id="statusIconWrapper">
+                    <svg class="status-spinner" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="spinner-track" cx="12" cy="12" r="10" stroke-width="2.5"/>
+                        <circle class="spinner-indicator" cx="12" cy="12" r="10" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    <span class="status-dot idle" id="statusDot" style="display: none;"></span>
+                </div>
+                <span class="status-icon-emoji">⏳</span>
+                <span class="status-text" id="statusText">等待任务</span>
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <button class="history-chip" id="historyBtn" aria-label="查看历史记录">
+                <span class="history-chip-icon">📚</span>
+                <span class="history-chip-text">历史记录</span>
+                <span class="history-chip-count" id="historyCount">0</span>
+            </button>
+            <div class="model-info">DeepSeek</div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-container">
+        <!-- 左侧任务工作台 -->
+        <section class="left-panel" aria-label="任务输入区">
+            <div class="panel-header">
+                <h2>🎯 The Work</h2>
+            </div>
+            
+            <!-- 任务卡片 -->
+            <div class="task-card">
+                <div class="task-card-header">
+                    <div class="task-card-icon">📝</div>
+                    <div class="task-card-title">创建新任务</div>
+                </div>
+                
+                <div class="task-input-section">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="queryInput" 
+                            placeholder="请输入任务描述...
+例：整理2024Q3新能源汽车政策
+要求：含补贴变化/地方政策对比"
+                            maxlength="500"
+                            aria-label="任务描述"
+                        ></textarea>
+                        <div class="char-count-wrapper">
+                            <div class="char-count-bar">
+                                <div class="char-count-fill" id="charCountBar" style="width: 0%"></div>
+                            </div>
+                            <div class="char-count-text">
+                                <span id="charCount">0</span>/500
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 实时建议提示 -->
+                    <div class="suggestion-box" id="suggestionBox" style="display: none;">
+                        <div class="suggestion-title">✨ 任务描述建议</div>
+                        <ul class="suggestion-list">
+                            <li class="suggestion-item" data-suggestion="添加时间范围，如：2024年、最近3个月">添加具体时间范围</li>
+                            <li class="suggestion-item" data-suggestion="说明报告用途，如：用于汇报、用于研究">明确报告用途</li>
+                            <li class="suggestion-item" data-suggestion="指定字数要求，如：1000字、2000字">设定字数要求</li>
+                            <li class="suggestion-item" data-suggestion="列出关键要点，如：含数据分析、含案例">列出关键要点</li>
+                        </ul>
+                    </div>
+                    <div class="hint">
+                        <span class="hint-icon">💡</span>
+                        <span>提示：描述越具体，结果越精准</span>
+                    </div>
+                    <button id="submitBtn" class="submit-btn" aria-label="生成报告">
+                        <span class="btn-icon" id="submitBtnIcon">🚀</span>
+                        <span class="btn-text" id="submitBtnText">生成报告</span>
+                    </button>
+                    <button id="stopBtn" class="stop-btn" aria-label="停止任务" style="display: none;">
+                        <svg class="stop-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="none"/>
+                            <path d="M8 8L16 16M16 8L8 16" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        <span class="btn-text">停止</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 预置问题快捷入口 -->
+            <div class="preset-questions">
+                <div class="preset-header">
+                    <span class="preset-icon">⚡</span>
+                    <span class="preset-title">快速开始</span>
+                </div>
+                <div class="preset-list" role="list">
+                    <div class="preset-item" data-query="整理一下中国近代100年的关键事件，最后生成1000字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">01</span>
+                        <span class="preset-text">中国近代史百年关键事件</span>
+                    </div>
+                    <div class="preset-item" data-query="分析一下新能源汽车行业的发展现状和趋势，生成800字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">02</span>
+                        <span class="preset-text">新能源汽车行业分析</span>
+                    </div>
+                    <div class="preset-item" data-query="介绍一下人工智能在医疗领域的应用，生成600字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">03</span>
+                        <span class="preset-text">AI医疗应用介绍</span>
+                    </div>
+                    <div class="preset-item" data-query="总结2024年全球经济发展趋势，生成1000字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">04</span>
+                        <span class="preset-text">2024全球经济趋势</span>
+                    </div>
+                    <div class="preset-item" data-query="分析一下中国数字经济发展现状，生成800字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">05</span>
+                        <span class="preset-text">中国数字经济分析</span>
+                    </div>
+                    <div class="preset-item" data-query="介绍区块链技术的基本原理和应用场景，生成600字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">06</span>
+                        <span class="preset-text">区块链技术入门</span>
+                    </div>
+                    <div class="preset-item" data-query="分析全球气候变化的影响和应对措施，生成1000字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">07</span>
+                        <span class="preset-text">气候变化应对策略</span>
+                    </div>
+                    <div class="preset-item" data-query="总结5G技术的发展现状和未来应用，生成800字报告" role="listitem" tabindex="0">
+                        <span class="preset-num">08</span>
+                        <span class="preset-text">5G技术与应用</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧智能流程画布 -->
+        <section class="right-panel" aria-label="工作流展示区">
+            <div class="panel-header">
+                <h2><svg class="workflow-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8l4 4 8-8"></path></svg> 智能工作流（实时可视化）</h2>
+            </div>
+            <div class="workflow-canvas" id="workflowCanvas">
+                <!-- 空状态 -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-illustration">
+                        <svg viewBox="0 0 120 120" class="ai-robot-icon">
+                            <!-- 头部 -->
+                            <rect x="35" y="30" width="50" height="40" rx="12" fill="#1890ff" opacity="0.9"/>
+                            <!-- 眼睛 -->
+                            <circle cx="50" cy="50" r="6" fill="#ffffff"/>
+                            <circle cx="70" cy="50" r="6" fill="#ffffff"/>
+                            <!-- 眼睛高光 -->
+                            <circle cx="52" cy="48" r="2" fill="#1890ff"/>
+                            <circle cx="72" cy="48" r="2" fill="#1890ff"/>
+                            <!-- 天线 -->
+                            <line x1="60" y1="30" x2="60" y2="15" stroke="#1890ff" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="60" cy="12" r="4" fill="#40a9ff"/>
+                            <!-- 身体 -->
+                            <rect x="45" y="72" width="30" height="25" rx="6" fill="#40a9ff" opacity="0.8"/>
+                            <!-- 身体装饰线 -->
+                            <line x1="52" y1="82" x2="68" y2="82" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                            <line x1="52" y1="88" x2="62" y2="88" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                            <!-- 底部装饰 -->
+                            <circle cx="35" cy="105" r="3" fill="#1890ff" opacity="0.5"/>
+                            <circle cx="60" cy="105" r="3" fill="#1890ff" opacity="0.5"/>
+                            <circle cx="85" cy="105" r="3" fill="#1890ff" opacity="0.5"/>
+                        </svg>
+                    </div>
+                    <h3>你好！我是你的工作助手。</h3>
+                    <p>你可以询问问题，我来帮你查找资料。</p>
+                </div>
+
+                <!-- 工作流节点容器 -->
+                <div class="workflow-nodes" id="workflowNodes" style="display: none;">
+                    <!-- 节点将通过JavaScript动态添加 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 历史记录模态框 -->
+    <div class="history-modal" id="historyModal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+        <div class="history-modal-overlay" id="historyModalOverlay"></div>
+        <div class="history-modal-content">
+            <div class="history-modal-header">
+                <h3 id="historyModalTitle">📚 历史记录</h3>
+                <button class="history-modal-close" id="historyModalClose" aria-label="关闭历史记录">✕</button>
+            </div>
+            <div class="history-modal-body" id="historyModalBody">
+                <!-- 历史记录列表 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 报告详情模态框 -->
+    <div class="report-modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+        <div class="report-modal-overlay" id="reportModalOverlay"></div>
+        <div class="report-modal-content">
+            <div class="report-modal-header">
+                <h3 id="reportModalTitle">报告详情</h3>
+                <button class="report-modal-close" id="reportModalClose" aria-label="关闭报告">✕</button>
+            </div>
+            <div class="report-modal-body" id="reportModalBody">
+                <!-- 报告内容 -->
+            </div>
+            <div class="report-modal-footer">
+                <button class="report-modal-btn secondary" id="reportModalCopy">📋 复制</button>
+                <button class="report-modal-btn export-btn" onclick="app.exportReport('txt')">📝 导出TXT</button>
+                <button class="report-modal-btn export-btn" onclick="app.exportReport('markdown')">📝 导出Markdown</button>
+                <button class="report-modal-btn export-btn" onclick="app.exportReport('word')">📄 导出Word</button>
+                <button class="report-modal-btn export-btn" onclick="app.exportReport('pdf')">📕 导出PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="frontend/static/js/app-chat.js?v=9"></script>
+</body>
+</html>
