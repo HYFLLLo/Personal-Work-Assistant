@@ -257,9 +257,10 @@
 
 ## 联系方式
 
-- 项目维护者：[Your Name]
-- 邮箱：[your.email@example.com]
-- GitHub：[https://github.com/yourusername/personal-work-assistant](https://github.com/yourusername/personal-work-assistant)
+- 项目维护者：[HYFLLLo]
+- 邮箱：[huyufeng227@163.com]
+- GitHub：[https://github.com/HYFLLLo/Personal-Work-Assistant](https://github.com/HYFLLLo/Personal-Work-Assistant)
+
 
 ---
 
